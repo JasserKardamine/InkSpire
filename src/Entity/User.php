@@ -16,10 +16,13 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $FirstName = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $LastName = null;
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $address = null;
 
     #[ORM\Column(length: 50)]
     private ?string $email = null;
@@ -27,21 +30,12 @@ class User
     #[ORM\Column(length: 50)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $address = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $role = null;
-
     #[ORM\Column]
     private ?int $tokens = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 100)]
     private ?string $picture = null;
 
-    /**
-     * @var Collection<int, Bid>
-     */
     #[ORM\OneToMany(targetEntity: Bid::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $bids;
 
@@ -57,24 +51,36 @@ class User
 
     public function getFirstName(): ?string
     {
-        return $this->FirstName;
+        return $this->firstName;
     }
 
-    public function setFirstName(string $FirstName): static
+    public function setFirstName(string $firstName): static
     {
-        $this->FirstName = $FirstName;
+        $this->firstName = $firstName;
 
         return $this;
     }
 
     public function getLastName(): ?string
     {
-        return $this->LastName;
+        return $this->lastName;
     }
 
-    public function setLastName(string $LastName): static
+    public function setLastName(string $lastName): static
     {
-        $this->LastName = $LastName;
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }
@@ -99,30 +105,6 @@ class User
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): static
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): static
-    {
-        $this->role = $role;
 
         return $this;
     }

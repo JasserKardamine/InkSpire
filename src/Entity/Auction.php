@@ -16,7 +16,7 @@ class Auction
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 59)]
+    #[ORM\Column(length: 50)]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -34,9 +34,6 @@ class Auction
     #[ORM\Column(length: 10)]
     private ?string $status = null;
 
-    /**
-     * @var Collection<int, Bid>
-     */
     #[ORM\OneToMany(targetEntity: Bid::class, mappedBy: 'auction', orphanRemoval: true)]
     private Collection $bids;
 
@@ -61,7 +58,7 @@ class Auction
 
         return $this;
     }
-
+    
     public function getStartDate(): ?\DateTimeInterface
     {
         return $this->startDate;
@@ -143,11 +140,12 @@ class Auction
     public function removeBid(Bid $bid): static
     {
         if ($this->bids->removeElement($bid)) {
+            // set the owning side to null (unless already changed)
             if ($bid->getAuction() === $this) {
                 $bid->setAuction(null);
             }
         }
-        
+
         return $this;
     }
 }
