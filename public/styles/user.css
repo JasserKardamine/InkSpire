@@ -102,7 +102,7 @@
 
 .form-title{
     width: 80%;
-    height: 140px;
+    height: 100px;
 }
 
 .form-title h1 {
@@ -123,7 +123,7 @@
     display: flex;
     width: 80%;
     flex-direction: column;
-    gap: 3px;
+    gap: 15px;
 }
 
 .action-form  input {
@@ -133,7 +133,6 @@
     border: 1px solid #C9CACF ; 
     background-color: #FAFAFA;
     border-radius: 3px;
-    margin-bottom: 15px;
 }
 .action-form label{
     font-size: 13px;
@@ -151,6 +150,23 @@
     font-weight: 600;
     width: 100%;
 }
+
+.action-form-row{
+    display: flex;
+    flex-direction: column;
+}
+.action-form ul {
+    margin:0; 
+    padding: 0;
+}
+
+.action-form ul li {
+    font-size: 13px;
+    font-weight: 600;
+    color: red;
+    list-style-type: none;
+}
+
 
 .forget-password-div a {
     text-align: right;
@@ -212,7 +228,7 @@
     background-color: white; 
 }
 
-.google-btn {
+.api-btn {
     position: relative; 
     padding: 12px 10px;  
     background-color: #F8FAFF; 
@@ -222,12 +238,13 @@
     cursor: pointer;
     font-size: 13px;
     display: flex;
+    margin-bottom: 10px;
     align-items: center;
     justify-content: center;
     font-weight: 500;
 }
 
-.google-btn img {
+.api-btn img {
     position: absolute;
     right: 10px; 
     width: 20px;

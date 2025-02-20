@@ -33,13 +33,18 @@
                         <h1>Log In</h1>
                     </div>
                     {{ form_start(form, {'attr': {'class': 'action-form','novalidate': 'novalidate'}}) }}
-                        {{ form_label(form.email) }}
-                        {{ form_widget(form.email) }} 
-                        {{ form_errors(form.email) }}
 
-                        {{ form_label(form.password) }}
-                        {{ form_widget(form.password) }}
-                        {{ form_errors(form.password) }}
+                        <div class="action-form-row">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }} 
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="action-form-row">
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password) }}
+                            {{ form_errors(form.password) }}
+                        </div>
                         <div class="forget-password-div">
                             <a href="">Forgot password ?</a>
                         </div>
@@ -52,9 +57,8 @@
                     <div class="separator">
                         <span>OR</span>
                     </div>
-
-                    <button type="submit" class="google-btn"> Sign in with Google <img src="./images/google.png" alt =""> </button>
-
+                    <button type="submit" class="api-btn"> Sign in with Google <img src="./images/google.png" alt =""> </button>
+                    <button type="submit" class="api-btn"> Sign in with GitHub <img src="./images/github.png" alt =""> </button>
                 </div>
                 
             </div>

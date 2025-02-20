@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
+
 class SigninType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -17,11 +18,11 @@ class SigninType extends AbstractType
         $builder
         ->add('email', EmailType::class, [
             'label' => 'Email Address',
-            'attr' => ['placeholder' => 'example@email.com'] , 
+            'attr' => ['placeholder' => 'example@email.com'],
         ])
         ->add('password', PasswordType::class, [
             'label' => 'Password',
-            'attr' => ['placeholder' => 'Enter your password']
+            'attr' => ['placeholder' => 'Enter your password'],
         ])
         ->add('Signin', SubmitType::class, [
             'label' => 'Sign In'
