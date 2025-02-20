@@ -23,19 +23,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50 )]
     #[Assert\NotBlank(message: "First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
-    #[Assert\Regex(
-    pattern: "/^(?=.*[a-zA-Z])(?=.*\d)?[a-zA-Z\d]+$/",
-    message: "First name must contain at least one letter and can include numbers, but cannot be only numbers or contain spaces."
-    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50  )]
     #[Assert\NotBlank(message: "First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
-    #[Assert\Regex(
-    pattern: "/^(?=.*[a-zA-Z])(?=.*\d)?[a-zA-Z\d]+$/",
-    message: "First name must contain at least one letter and can include numbers, but cannot be only numbers or contain spaces."
-    )]
     private ?string $lastName = null;
 
     #[Assert\Length(max: 50, maxMessage: "Address cannot exceed 50 characters.")]
