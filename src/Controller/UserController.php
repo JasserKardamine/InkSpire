@@ -29,12 +29,12 @@ final class UserController extends AbstractController
         $SigninForm->handleRequest($request) ;
         
         if($SigninForm->isSubmitted() && $SigninForm->isValid()) {
-
+            
             $email = $SigninForm->get('email')->getData() ; 
             $password = trim($SigninForm->get('password')->getData()) ;  
-
+            
             $SessionUser = $this->entityManager->getRepository(User::class)->findOneBy(['email'=> $email])  ;  
-
+            
             if($SessionUser){
                 if($passwordHasher->isPasswordValid($SessionUser,$password)) {
                     $session->set('UserId',$SessionUser->getId()) ; 

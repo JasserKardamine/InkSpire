@@ -20,18 +20,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50 )]
     #[Assert\NotBlank(message: "First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Assert\Regex(
+    pattern: "/^(?=.*[a-zA-Z])(?=.*\d)?[a-zA-Z\d]+$/",
+    message: "First name must contain at least one letter and can include numbers, but cannot be only numbers or contain spaces."
+    )]
     private ?string $firstName = null;
 
-    #[Assert\NotBlank(message: "Last name is required.")]
-    #[Assert\Length(max: 50, maxMessage: "Last name cannot exceed 50 characters.")]
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50  )]
+    #[Assert\NotBlank(message: "First name is required.")]
+    #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Assert\Regex(
+    pattern: "/^(?=.*[a-zA-Z])(?=.*\d)?[a-zA-Z\d]+$/",
+    message: "First name must contain at least one letter and can include numbers, but cannot be only numbers or contain spaces."
+    )]
     private ?string $lastName = null;
 
     #[Assert\Length(max: 50, maxMessage: "Address cannot exceed 50 characters.")]
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $address = null;
 
     #[Assert\NotBlank(message: "Email is required.")]
@@ -46,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[Assert\Length(max: 100, maxMessage: "bio cannot exceed 100 characters.")]
-    #[ORM\Column(length: 100)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $bio = null;
 
     #[ORM\Column(nullable: true)]

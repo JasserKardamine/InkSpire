@@ -17,7 +17,7 @@ class SigninType extends AbstractType
         $builder
         ->add('email', EmailType::class, [
             'label' => 'Email Address',
-            'attr' => ['placeholder' => 'example@email.com']
+            'attr' => ['placeholder' => 'example@email.com'] , 
         ])
         ->add('password', PasswordType::class, [
             'label' => 'Password',
@@ -33,6 +33,7 @@ class SigninType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'validation_groups' => ['signin']
         ]);
     }
 }
