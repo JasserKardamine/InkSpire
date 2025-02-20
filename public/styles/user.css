@@ -1,0 +1,235 @@
+
+.main-container{
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/images/liquid-marbling-paint-texture-background-fluid-painting-abstract-texture-intensive-color-mix-wallpaper.jpg');
+    background-size: cover; 
+    background-position: center;  
+    background-repeat: no-repeat;  
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: devioussans02extrabold, "Helvetica Neue", Helvetica, Arial, メイリオ, meiryo, "ヒラギノ角ゴ pro w3", hiragino kaku gothic pro, sans-serif;
+    font-weight: 400;
+}
+
+
+.logo-container{
+    margin-top: 60px;
+}
+.logo-container img {
+    margin-left: 60px;
+    width: 60px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.login-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.login-card{
+    width: 47%;
+    height: 75vh;
+    display: flex;
+    flex-direction: row;
+    background-color: white ; 
+}
+
+.image-container{ 
+    background-position:center; 
+    background-size: cover;
+    width: 48%;
+    overflow: hidden;
+    height: 100%;
+    background-repeat: no-repeat;  
+}
+
+.singin-image-container{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/anato-finnstark-web-peti.jpg);
+}
+
+.signup-image-container{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/toji.jpg);
+
+}
+
+.image-title{
+    width: 70%;
+    text-align: left;
+}
+
+.image-title h1 {
+    color: white;
+    font-weight: 800;
+    font-size: 36px;
+    margin: 130px 0 0 60px;
+    line-height: 1.2; 
+}
+
+.image-paragraph{
+    width: 77%;
+    text-align: left;
+}
+
+.image-paragraph p {
+    color: white;
+    margin: 30px 0 0 60px;
+    font-size: 14px;
+    line-height: 1.4; 
+}
+
+.close-btn{
+    display: flex;
+    height: auto;
+    width: 90%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+
+.close-btn a {
+    margin-top: 20px;
+    color: black;
+}
+
+.form-title{
+    width: 80%;
+    height: 140px;
+}
+
+.form-title h1 {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+
+.form-container{
+    width: 52%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.action-form{
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.action-form  input {
+    padding: 11px 10px 11px 10px ;
+    outline: none;
+    font-size: 15px;
+    border: 1px solid #C9CACF ; 
+    background-color: #FAFAFA;
+    border-radius: 3px;
+    margin-bottom: 15px;
+}
+.action-form label{
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.action-form button{
+    padding: 12px 10px 12px 10px ;  
+    border: 0;
+    background-color: #0071F9 ; 
+    color: white;
+    transition: background-color 0.2s ease-in;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+}
+
+.forget-password-div a {
+    text-align: right;
+    color: #725D6C;
+    font-size: 12px;
+}
+
+.forget-password-div{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+
+.makeacc-link-div {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.makeacc-link-div a {
+    margin-top: 10px;
+    text-align: right;
+    color: #725D6C;
+    font-size: 12px;
+}
+
+
+
+
+.signin-form button:hover{
+    background-color:rgb(23, 98, 190) ; 
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin: 20px 0;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.separator span {
+    padding: 0 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    background-color: white; 
+}
+
+.google-btn {
+    position: relative; 
+    padding: 12px 10px;  
+    background-color: #F8FAFF; 
+    border: 1px solid #C9CACF; 
+    border-radius: 4px;
+    width: 80%;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.google-btn img {
+    position: absolute;
+    right: 10px; 
+    width: 20px;
+    height: auto;
+}
