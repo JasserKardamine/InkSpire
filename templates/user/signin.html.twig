@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/user.css">
+    <link rel="icon" type="image/png" href="images/logo.jpg">
+    <title>Log In | InkSpire</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close" />
+</head>
+<body>
+    <div class="main-container">
+        <div class="logo-container">
+            <a href="{{ path('app_home') }}"><img src="/images/logo.jpg" alt=""></a>
+        </div>
+        <div class="login-container">
+            <div class="login-card">
+                
+                <div class="image-container singin-image-container">
+                    <div class="image-title">
+                        <h1>JOIN THE LARGEST ART COMMUNITY IN THE WORLD</h1>
+                    </div>
+                    <div class="image-paragraph">
+                        <p>Get free access to 650 million pieces of art. Showcase, promote, sell, and share your work with over 100 million members.</p>
+                    </div>
+                </div>
+                <div class="form-container">
+                    <div class="close-btn ">
+                        <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                    </div>
+                    <div class="form-title">
+                        <h1>Log In</h1>
+                    </div>
+                    {{ form_start(form, {'attr': {'class': 'action-form','novalidate': 'novalidate'}}) }}
+                        {{ form_label(form.email) }}
+                        {{ form_widget(form.email) }} 
+                        {{ form_label(form.password) }}
+                        {{ form_widget(form.password) }}
+                        <div class="forget-password-div">
+                            <a href="">Forgot password ?</a>
+                        </div>
+                       {{ form_row(form.Signin) }}
+                    {{ form_end(form) }}
+                        <div class="makeacc-link-div">
+                            <a href="{{ path('app_signup') }}">don't have an account ?</a>
+                        </div>
+                
+                    <div class="separator">
+                        <span>OR</span>
+                    </div>
+
+                    <button type="submit" class="google-btn"> Sign in with Google <img src="./images/google.png" alt =""> </button>
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class AuctionController extends AbstractController
-{
+{   
     #[Route('/auction', name: 'app_auction')]
     public function index(): Response
     {

@@ -1,0 +1,310 @@
+
+*{
+  margin : 0;
+  padding: 0; 
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #87878B #101014; 
+}
+
+
+
+
+body {
+  margin: 0;
+  text-decoration: none;
+  box-sizing: border-box;
+  background-color: #101014;
+  overflow: hidden;
+}
+
+
+nav {
+  padding: 10px 10px;
+  background: #101014; 
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.navdiv {
+  display: flex;
+  gap: 25px;
+  margin-left: 20px;
+  justify-content: flex-start; 
+  align-items: center;
+  max-width: 1850px;
+  width: 100%;
+}
+
+.logo img {
+  height: 45px;
+  width: 45px;
+  border-radius: 10px;
+}
+
+.navdiv ul {
+  display: flex;
+  justify-self: start;
+  list-style: none;
+  margin-right: 30px;
+  margin: 0;
+}
+
+li {
+  margin-right: 30px;
+}
+li a {
+  color: #AEAEB2;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition:  0.2s ease-in;
+}
+ul li a:hover {
+  color: #61CDFF;
+}
+
+.search {
+  position: relative;
+  width: 60%;
+  display: flex;
+  align-items: center;
+
+}
+.search input {
+  color: white;
+  background: #101014;
+  width: 100%;
+  padding: 7px;
+  min-width: 300px;
+  padding-left: 50px;
+  margin-right: 10px;
+  border: 2px solid #87878B;
+  border-radius: 50px;
+  outline: none;
+  transition: border-color 0.2s ease-in; 
+}
+
+.search input:focus {
+  border-color: #3E79F6; 
+}
+
+
+.search i {
+  position: absolute;
+  left: 20px;
+  font-size:15px;
+  color: #AEAEB2;
+}
+.auth-buttons {
+  display: flex;
+  gap: 10px; 
+}
+.auth-buttons i {
+  margin-right: 5px;
+}
+.auth-buttons a {
+  width: 100px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight:500;
+  transition: background-color 0.3s;
+  padding: 5px;
+}
+
+.signup-button {
+  margin-left: 60px;
+  background-color: #404044;
+  color: white;
+}
+.signup-button:hover {
+  background-color: #606064;
+}
+
+.login-button {
+  border: 1px solid white ;
+  background-color: #3E79F6;
+  color: black;
+}
+
+.login-button:hover {
+  background-color: #007B9E;
+}
+
+
+/* jasser */
+
+.home-container{
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+.top-collections-full{
+  margin-top: 100px;
+}
+
+.special-container{
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+}
+
+.special-container a {
+  display: inline-block; 
+  overflow: hidden; 
+  border-radius: 5px; 
+}
+
+
+.special-container a img {
+  border-radius: 2px;
+  object-fit: cover;
+  display: block; 
+  width: 100%;
+  height: 100%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.special-container  a:hover img {
+  transform: scale(1.1); 
+}
+
+
+/* containers : */
+
+.top-collections-container a {
+  width: calc(20% - 10px); 
+  aspect-ratio: 2 / 1.2;
+  height: auto ; 
+  max-width: 100%; 
+  overflow: hidden;
+}
+
+.top-artists-container a {
+  width: calc(5% - 10px); 
+  height: auto ; 
+  max-width: 100%; 
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+}
+
+.top-artwork-container a {
+  width: calc(11% - 6px); 
+  height: auto ; 
+  max-width: 100%; 
+  aspect-ratio: 1 / 1;
+}
+
+
+.container-title {
+  color:white ; 
+  margin-left: 30px;
+  font-weight: 600;
+}
+
+/*----------*/
+
+
+/*aditional functionalities*/
+
+.popularity {
+  height: 55px;
+  border-radius: 30px;
+  width: 350px ; 
+  display: flex;
+  background-color: white;
+  flex-direction: row;
+  position: absolute;
+  bottom: 10px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  color: white;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  gap: 11px;
+}
+
+.active {
+  border-radius: 30px;
+  padding : 11px 19px 11px 19px ; 
+  border: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color:#8B8B90 ;
+  background: black;
+  transition: color 0.2s ease-in;
+}
+
+.not-active {
+  border-radius: 30px;
+  padding : 11px 19px 11px 19px ; 
+  border: 0;
+  font-size: 15px;
+  font-weight: 500;
+  background: white;
+  transition: color 0.2s ease-in;
+}
+
+.not-active:hover{
+  color: #8B8B90 ; 
+}
+
+.post-add{
+  height:60px;
+  width: 60px;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 10px;
+  z-index: 9999;
+}
+
+.post-add span{
+  cursor: pointer;
+  font-size: 30px;
+  color: black;
+  user-select: none;   
+}
+
+.go-up{
+  height:60px;
+  width: 60px;
+  text-decoration: none;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  cursor: pointer;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  right: 10px;
+  z-index: 9999;
+}
+
+.go-up span{
+  cursor: pointer;
+  font-size: 30px;
+  color: black;
+  user-select: none;   
+}
+/*--------*/
