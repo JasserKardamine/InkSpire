@@ -131,7 +131,7 @@ final class UserController extends AbstractController
             } 
         }
 
-        return $this->render('user/verify.html.twig');
+        return $this->render('user/verify.html.twig',['user' => $user]);
     }
 
 
