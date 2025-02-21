@@ -119,7 +119,14 @@ final class UserController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            $enteredCode = $request->request->get('verification_code');
+            $piece1 = $request->request->get('1');
+            $piece2 = $request->request->get('2');
+            $piece3 = $request->request->get('3');
+            $piece4 = $request->request->get('4');
+            $piece5 = $request->request->get('5');
+            $piece6 = $request->request->get('6');
+
+            $enteredCode = $piece1 . $piece2 . $piece3 . $piece4 . $piece5 . $piece6 ; 
 
             if ($enteredCode == $correctCode) {
                 $this->entityManager->persist($user);
@@ -178,14 +185,7 @@ final class UserController extends AbstractController
             $EditForm = $this->createForm(EditType::class,$user) ; 
             $EditForm->handleRequest($request) ; 
             if($EditForm->isSubmitted() && $EditForm->isValid()) {
-
-                $plainPassword = $EditForm->get('password')->getData();
-
-                if(!empty($plainPassword)){
-                    $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword );
-                    $user->setPassword($hashedPassword);
-                }
-
+                
                 $file = $EditForm->get('picture')->getData();
                 if ($file) {
                     $uploadsDirectory = $this->getParameter('uploads_directory');

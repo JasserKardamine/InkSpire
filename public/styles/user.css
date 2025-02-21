@@ -57,7 +57,10 @@
 
 .signup-image-container{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/toji.jpg);
+}
 
+.verify-image-container{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/crystals.jpg);
 }
 
 .image-title{
@@ -367,12 +370,12 @@
 }
 
 .Profile-action-edit{
-    background-color:rgb(13, 77, 155);
+    background-color:#1F7EF3 ; 
     color: black;
     transition: background-color 0.2s ease-in-out;
 }
 .Profile-action-edit:hover{
-    background-color:rgb(13, 88, 180);
+    background-color:rgb(53, 142, 250);
 } 
 
 .Profile-action-logout{
@@ -661,73 +664,99 @@
 
 /*verification page styling */
 
-.verfication-container{
-    position: absolute; 
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    background-image: url('/images/bg1.png');
-    background-size: cover; 
-    background-position: center;  
-    background-repeat: no-repeat;  
-    min-height: 100vh;
+.verification{
+    height: 70vh ;
+    width: 60%;
+}
+
+.image-container-verification{ 
+    background-position:center; 
+    background-size: cover;
+    width: 36%;
     overflow: hidden;
-    font-family: devioussans02extrabold, "Helvetica Neue", Helvetica, Arial, メイリオ, meiryo, "ヒラギノ角ゴ pro w3", hiragino kaku gothic pro, sans-serif;
-    font-weight: 400;
+    height: 100%;
+    background-repeat: no-repeat;  
 }
-.verfication-page{
-    width: 28%;
-    height: auto ; 
-    border-radius: 3px;
+
+.form-container-verification{
+    width: 64%;
     display: flex;
+    align-items: center;
+    justify-content: flex-start;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: #18181C
 }
 
-.verfication-page h1 {
-    font-size: 35px;
-    color: white;
+.form-container-verification h1 {
+    font-size: 37px;
+    letter-spacing: 1px;
 }
 
-
-.verfication-page form input {
-    border-radius: 5px;
-    padding: 16px 10px 16px 10px ;
-    background-color: #101014 ; 
-    border: 1px solid #303034 ; 
-    color: white;
+.verification-manual{
+    width: 79%;
 }
 
-.verfication-page form button {
-    padding: 16px 10px 16px 10px ;
-    border-radius: 5px;
-    margin-bottom: 50px;
-}
-
-.the-verification-message{
-    width: 80%;
-    height: 100px; 
-    background-color:#a7c3e6 ; 
-    margin-bottom: 15px;
-    border-radius: 5px;
+.verification-email{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
 }
+.verification-email .email{
+    font-weight: 600;
+} 
 
-.verif-paragraph-holder{
+.verification-manual .manual
+{
     width: 80%;
 }
+.verification-manual .manual p{
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
 
-.verif-paragraph-holder h3 {
-  line-height: 1.5;
-  font-weight: 500;
-  font-size: 17px;
-  color:rgb(14, 75, 150) ; 
+.otp-verification-input{
+    margin-top: 50px;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.otp-verification-input input {
+    width: 60px;
+    height: 60px;
+    outline: none;
+    border-radius: 6px;
+    font-size: 40px;
+    border: 0;
+    text-align: center;  
+    vertical-align: middle;
+    box-shadow:
+    0px 0px 0.9px rgba(0, 0, 0, 0.02),
+    0px 0px 2.2px rgba(0, 0, 0, 0.028),
+    0px 0px 4.1px rgba(0, 0, 0, 0.035),
+    0px 0px 7.4px rgba(0, 0, 0, 0.042),
+    0px 0px 13.8px rgba(0, 0, 0, 0.05),
+    0px 0px 33px rgba(0, 0, 0, 0.07);
+}
+
+.verification-buton{
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.verification-buton button {
+    background-color: #0071F9;
+    border: 0;
+    padding: 10px 20px 10px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+
+.verification-buton button:hover {
+    background-color:rgb(31, 126, 243);
+    transform: scale(1.1);
 }
