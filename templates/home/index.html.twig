@@ -1,9 +1,27 @@
 {% extends 'base.html.twig' %}
 
 
+{% block actionblock %}
+    {% if user is not null %}
+        <div class="home-profile-pic-div">
+            <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
+            <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
+            <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture"> </a>
+           
+        </div>    
+    {% else %}
+        <div class="auth-buttons">
+            <a href="{{ path('app_signup')}}" class="signup-button" id="signup-button" ><i class="fa-solid fa-pen"></i>Sign Up</a>                
+            <a href="{{ path('app_signin')}}" class="login-button" id="login-button"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+
 {% block tochange %}
     {# action buttons #}
-        <div class="post-add" id ="post-add"><span class="material-symbols-outlined">add</span></div>
         <div class="popularity" id = "popularity">
             <button type ="submit" class="pop active" >Community</button>
             <button type ="submit" class="pop not-active">Trending</button>

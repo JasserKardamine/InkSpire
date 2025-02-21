@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Validator\Emailexist ;
+use App\Validator\Passwordvalid ;
+use App\Validator\Namevalid ;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,11 +27,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50 )]
     #[Assert\NotBlank(message: "* First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Namevalid(message : '* Invalid Firstname !')]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50  )]
     #[Assert\NotBlank(message: "* Last name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Namevalid(message : '* Invalid Lastname !')]
     private ?string $lastName = null;
 
     #[Assert\Length(max: 50, maxMessage: "* Address cannot exceed 50 characters.")]
@@ -56,7 +60,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $tokens = null;
 
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\Url(message: "* Picture must be a valid URL.")]
+    //#[Assert\Url(message: "* Picture must be a valid URL.")]
     private ?string $picture = null;
 
     
@@ -86,6 +90,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'maxMessage' => 'Your password should not be longer than {{ limit }} characters.',
             'groups' => ['signin']
         ]));
+
+        $metadata->addPropertyConstraint('password', new Passwordvalid('email', 'strict', ['signin'], null));
+
     }
     
 
@@ -95,6 +102,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: Bid::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $bids;
+
+    #[ORM\Column]
+    private ?int $role = null;
 
     public function __construct()
     {
@@ -246,6 +256,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email; // Use email as the unique identifier
+    }
+
+    public function getRole(): ?int
+    {
+        return $this->role;
+    }
+
+    public function setRole(int $role): static
+    {
+        $this->role = $role;
+
+        return $this;
     }
 
 }

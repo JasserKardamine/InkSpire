@@ -1,0 +1,196 @@
+{% extends 'base.html.twig' %}
+
+{% block actionblock %}
+    {% if user.id is not null %}
+        <div class="home-profile-pic-div">
+            <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
+            <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
+            <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture"> </a>
+           
+        </div>    
+    {% else %}
+        <div class="auth-buttons">
+            <a href="{{ path('app_signup')}}" class="signup-button" id="signup-button" ><i class="fa-solid fa-pen"></i>Sign Up</a>                
+            <a href="{{ path('app_signin')}}" class="login-button" id="login-button"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block tochange %}
+  <div class="main-edit-container">
+    <div class="edit-select-contianer">
+        <div class="edit-select">
+            <div class="edit-select-img">
+              <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture">
+              <div class="edit-select-info">
+                  <h3>SETTINGS</h3>
+                  <h1>{{ user.firstName ~ ' ' ~ user.lastName }}</h1>
+                  <p>Artist</p>
+              </div>
+            </div>
+            <div class="edit-select-list">
+                <a href="">profile</a>
+            </div>
+        </div>
+    </div>
+    <div class="edit-card-container">
+        
+          <div class="edit-card">
+              <div class="edit-Title">
+                <h1>Account</h1>
+                <p>Email, password, address, bio, profile image </p>
+              </div>
+            {{ form_start(form , {'attr': {'class': 'edit-form','novalidate': 'novalidate'}}) }}
+
+                <div class="edit-action-div">
+                    <div class="edit-column-title">
+                      <div>
+                        <h2>Profile Picture</h2>
+                        <p>You look greate today </p>
+                      </div>
+                    </div>
+
+                    <div class="edit-column-input">
+                      <div class="edit-form-componment">
+                        {{ form_widget(form.picture) }}
+                        {{ form_errors(form.picture) }}
+                      </div>
+                    </div>
+
+                </div>
+
+
+              <div class="edit-action-div">
+                <div class="edit-column-title">
+                    <div>
+                      <h2>First name </h2>
+                      <p>The Firstname you use </p>
+                    </div>
+                  </div>
+
+                  <div class="edit-column-input">
+                      <div class="edit-form-componment">
+                        {{ form_widget(form.firstName) }}
+                        {{ form_errors(form.firstName) }}
+                      </div>
+                  </div>
+                </div>
+
+                <div class="edit-action-div">
+                    <div class="edit-column-title">
+                      <div>
+                        <h2>Last name </h2>
+                        <p>The Lastname you use</p>
+                      </div>
+                    </div>
+
+                    <div class="edit-column-input">
+                      <div class="edit-form-componment">
+                        {{ form_widget(form.lastName) }}
+                        {{ form_errors(form.lastName) }}
+                      </div>
+                    </div>
+                </div>
+
+                <div class="edit-action-div">
+
+                  <div class="edit-column-title">
+                    <div>
+                      <h2>Address</h2>
+                      <p>Your address in here</p>
+                    </div>
+                  </div>
+
+                  <div class="edit-column-input">
+                    <div class="edit-form-componment">
+                      {{ form_widget(form.address) }}
+                      {{ form_errors(form.address) }}
+                    </div>
+                  </div>
+
+              </div>
+
+                <div class="edit-action-div">
+
+                  <div class="edit-column-title">
+                    <div>
+                      <h2>Bio</h2>
+                      <p>something aout your self </p>
+                    </div>
+                  </div>
+
+                  <div class="edit-column-input">
+                    <div class="edit-form-componment">
+                      {{ form_widget(form.bio) }}
+                      {{ form_errors(form.bio) }}
+                    </div>
+                  </div>
+
+              </div>
+
+                <div class="edit-action-div">
+
+                    <div class="edit-column-title">
+                      <div>
+                        <h2>Login Email</h2>
+                        <p>The email you use to access InkSpire</p>
+                      </div>
+                    </div>
+
+                    <div class="edit-column-input">
+                      <div class="edit-form-componment">
+                        {{ form_widget(form.email) }}
+                        {{ form_errors(form.email) }}
+                      </div>
+                    </div>
+
+                </div>
+
+                <div class="edit-action-div">
+
+                    <div class="edit-column-title">
+                      <div>
+                        <h2>Password</h2>
+                        <p>the password u use to access InkSpire</p>
+                      </div>
+                    </div>
+
+                    <div class="edit-column-input">
+                      <div class="edit-form-componment">
+                        {{ form_widget(form.password) }}
+                        {{ form_errors(form.password) }}
+                      </div>
+                    </div>
+
+                </div>
+
+
+                <div class="edit-action-div">
+
+                    <div class="edit-column-title">
+                      <div>
+                        <h2>Danger Zone</h2>
+                        <p>Be careful with this </p>
+                      </div>
+                    </div>
+
+                    <div class="edit-danger-zone">
+                       {{ form_widget(form.save) }}
+                      <a href= "{{ path('cancelacc_app') }}" >Cancel Account </a>
+                    </div>
+
+                </div>
+
+
+
+                
+          {{ form_end(form) }}
+
+                <div class="extra-space"></div>
+          </div>
+    </div>
+  </div>
+  
+{% endblock %}

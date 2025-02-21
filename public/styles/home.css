@@ -1,3 +1,6 @@
+html {
+  scroll-behavior: smooth;
+}
 
 *{
   margin : 0;
@@ -31,11 +34,9 @@ nav {
 
 .navdiv {
   display: flex;
-  gap: 25px;
-  margin-left: 20px;
+  gap: 30px;
   justify-content: flex-start; 
   align-items: center;
-  max-width: 1850px;
   width: 100%;
 }
 
@@ -43,6 +44,7 @@ nav {
   height: 45px;
   width: 45px;
   border-radius: 10px;
+  margin-left: 20px;
 }
 
 .navdiv ul {
@@ -69,7 +71,7 @@ ul li a:hover {
 
 .search {
   position: relative;
-  width: 60%;
+  width:64%;
   display: flex;
   align-items: center;
 
@@ -123,7 +125,7 @@ ul li a:hover {
 }
 
 .signup-button {
-  margin-left: 60px;
+
   background-color: #404044;
   color: white;
 }
@@ -308,3 +310,43 @@ ul li a:hover {
   user-select: none;   
 }
 /*--------*/
+
+.home-profile-pic-div{
+  width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.home-profile-pic-div a {
+  height: auto;
+  padding: 0;
+  margin: 0;
+  color: #727276;
+  font-size: 20px;
+}
+
+
+.home-profile-picture {
+  text-decoration: none;
+  width: 40px;
+  height: 40px;
+}
+
+.home-profile-picture img {
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; 
+}
+
+.home-profile-pic-div .material-symbols-outlined {
+  font-size: 25px;
+  transition: color 0.3s ease-in-out;
+}
+
+.home-profile-pic-div .material-symbols-outlined:hover {
+  color:#3F7EFE ; 
+}
+

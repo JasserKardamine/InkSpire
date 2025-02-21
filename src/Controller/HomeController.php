@@ -2,27 +2,38 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class HomeController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+     {
+         $this->entityManager = $entityManager;
+     }
+     
     #[Route('/home', name: 'app_home')]
-    public function index(): Response
+    public function index(SessionInterface $session): Response
     {
+        $userid = $session->get('UserId',null) ; 
+
+
+        $user = null;
+        if ($userid !== null) {
+            $user = $this->entityManager->getRepository(User::class)->find($userid);
+        }
+
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'user' => $user , 
         ]);
     }
 
-    #[Route('/login', name: 'app_login')]
-    public function userlogin(): Response
-    {
-        
-        return $this->render('home/login.html.twig', [
-            'controller_name' => 'HomeController',
-        ]);
-    }
+
 
 }
