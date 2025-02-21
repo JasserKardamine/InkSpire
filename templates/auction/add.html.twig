@@ -1,0 +1,73 @@
+{% extends 'auction/show.html.twig' %}
+{% block title %}
+    Auction - Add
+{% endblock %}
+{% block elements %}
+<div class="add-container">
+    <div class="add">
+        <div class="add-header">
+            <h1> <i class="fa-solid fa-circle-plus"></i> Create an Auction <span> .. but don't be Greedy</span></h1>
+        </div>
+        <div class="auction-form">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate' , 'class' : 'assert-form' }}) }}
+            <div class="horizontal-form">
+                <div class="lines">
+                    <div class="line1">
+                        <div class="form-group">
+                            <h3><i class="fa-solid fa-bookmark"></i> Label : </h3>
+                                <div class="form-inputs">
+                                    {{ form_widget(form.label) }}
+                                    {{ form_errors(form.label) }}
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <h3><i class="fa-solid fa-calendar-days"></i> Start Date : </h3>
+                                <div class="form-inputs">
+                                    {{ form_widget(form.startDate) }}
+                                    {{ form_errors(form.startDate) }} 
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h3><i class="fa-solid fa-calendar-days"></i> End Date : </h3>
+                                <div class="form-inputs">
+                                    {{ form_widget(form.endDate) }}
+                                    {{ form_errors(form.endDate) }} 
+                                </div>
+                        </div>
+
+                        <div class="form-group">
+                            <h3><i class="fa-solid fa-sack-dollar"></i> Starting Price : </h3>
+                            <div class="form-inputs">
+                                {{ form_widget(form.startPrice) }}
+                                {{ form_errors(form.startPrice) }} 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line2">
+                        {% if form.artwork is not empty %}
+                            <div class="artworks-form-group">
+                                {% for choice in form.artwork %}
+                                    <label class="artwork-option">
+                                        {{ form_widget(choice) }}
+                                        <img src="{{ asset('uploads/pictures/' ~ choice.vars.attr['data-image']) }}" alt="Artwork" class="artwork-thumbnail">
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <div class="form-inputs-image">
+                                {{ form_errors(form.artwork) }}
+                            </div>
+                        {% else %}
+                            <a href="#">
+                                <i class="fa-solid fa-image"></i> You don't have any artworks to put on auction
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <button type="submit" class="submit-button"><i class="fa-solid fa-circle-check"></i> Done</button>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

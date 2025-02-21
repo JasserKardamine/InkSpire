@@ -7,9 +7,6 @@
 /public/bundles/
 /var/
 /vendor/
-/migrations/
-.env
-.env.*
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

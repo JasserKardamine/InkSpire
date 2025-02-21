@@ -1,0 +1,35 @@
+{% extends 'auction/show.html.twig' %}
+
+{% block title %}
+    Inkspire - Bid
+{% endblock %}
+{% block wallpaperTitle %}
+    <h1 class="wallpaper-title">Review your Bids</h1>
+{% endblock %}
+    {% block search %}
+        <input type="text" id="search-input" placeholder="Search for Bids">
+    {% endblock %}
+    {% block filters %}
+    <div class="right-buttons">
+        <button class="bids" onclick="window.location.href='{{ path('app_auction_show') }}'">
+            <i class="fa-solid fa-arrow-left"></i></i> Auctions
+        </button>
+    </div>
+{% endblock %}
+{% block elements %}
+    <div class="bids-elemnents">
+        {% for bid in bids %}
+            <div class="bid-card">
+                <img src="{{ asset('uploads/pictures/' ~ bid.auction.artwork.getPicture()) }}" alt="Artwork">
+                <h3><i class="fa-solid fa-sack-dollar"></i> Amount: ${{ bid.amount }}</h3>
+                <h3><i class="fa-solid fa-clock"></i> Submit Date: ${{ bid.time|date('Y-m-d H:i:s') }}</h3>
+                <h2> | </h2>
+                <p><i class="fa-solid fa-sack-dollar"></i> Highest Bid: ${{ bid.auction.getEndPrice() }}</p>
+                <p><i class="fa-solid fa-clock"></i> End Date: {{ bid.auction.getEndDate()|date('Y-m-d H:i:s') }}</p>
+                <button class="bids-delete" onclick="window.location.href='{{ path('app_bid_delete', {'id': bid.id}) }}'">
+                    <i class="fa-solid fa-ban"></i>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

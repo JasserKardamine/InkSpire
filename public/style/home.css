@@ -7,10 +7,6 @@
   scrollbar-width: thin; /* For Firefox */
   scrollbar-color: #87878B #101014; 
 }
-
-
-
-
 body {
   margin: 0;
   text-decoration: none;
@@ -18,7 +14,6 @@ body {
   background-color: #101014;
   overflow: hidden;
 }
-
 
 nav {
   padding: 10px 10px;

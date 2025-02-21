@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Inkspire - Auction
+{% endblock %}
+{% block tochange %}
+    <div class="content">
+        <div class="wallpaper">
+            <img src="{{ asset('images/auctionBG.jpg') }}" alt="event background">
+            {% block wallpaperTitle %}
+            <h1 class="wallpaper-title">Discover Auctions</h1>
+            {% endblock %}
+        </div>
+        <div class="auction">
+            <div class="filter">
+                <div class="price-filter">
+                    <h2 id="price">Price range :</h2>
+                    <div class="slider-container">
+                        <input type="range" id="min-price" min="0" max="5000" value="5000" step="10">
+                        <div class="slider-value">
+                            <span id="max-value">$0</span>
+                            <span id="max-value">$5000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="auction-header">
+                    <div class="auction-search">
+                        <div class="search-bar">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            {% block search %}
+                            <input type="text" id="search-input" placeholder="Search for auctions">
+                             {% endblock %}
+                        </div>
+                    </div>
+                    {% block filters %}
+                        <div class="right-buttons">
+                            <button class="bids" onclick="window.location.href='{{ path('app_bid_show') }}'">
+                                <i class="fa-solid fa-arrow-right"></i> My Bids
+                            </button>
+                            <form method="get" action="{{ path('app_auction_show') }}">
+                                <div class="select">
+                                    <select id="type" name="type" onchange="this.form.submit()">
+                                        <option value="1" {{ filterType == 1 ? 'selected' }}>All Auctions</option>
+                                        <option value="2" {{ filterType == 2 ? 'selected' }}>My Auctions</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    {% endblock %}
+                </div>
+                {% block elements %}
+                    <div class="elements">
+                            {% for auction in auctions %}
+                                <div class="auction-card" data-end-time="{{ auction.endDate|date('Y-m-d H:i:s') }}">
+                                    <img src="{{ asset('uploads/pictures/' ~ auction.artwork.getPicture()) }}" alt="Artwork">
+                                    <h2>{{ auction.label }}</h2>
+                                    <p><i class="fa-solid fa-sack-dollar"></i> Starting Price: ${{ auction.startPrice }}</p>
+                                    <p><i class="fa-solid fa-sack-dollar"></i> Highest Bid: ${{ auction.endPrice }}</p>
+                                    <p class="countdown">Loading...</p>
+                                    <div class="card-buttons">
+                                        {% if filterType == 1 %}
+                                            {% if auction.artwork.getUser() != user %}
+                                                <button class="bid" onclick="showBidInput({{ auction.getId() }})">
+                                                    <i class="fa-solid fa-hand-holding-dollar"></i> Place Bid
+                                                </button>
+                                                <button class="details" onclick="showWindow()">
+                                                    <i class="fa-solid fa-circle-info"></i> More details
+                                                </button>
+                                                <div class="bid-input-container" style="display: none;" id="bid-input-container-{{ auction.getId() }}">
+                                                    <form id="bid-form-{{ auction.getId() }}" action="{{ path('app_bid_add') }}" method="POST">
+                                                        <input type="number" id="bid-amount-{{ auction.getId() }}" name="bidAmount" placeholder="Enter your bid" required style="padding: 10px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; width: 150px;">
+                                                        <input type="hidden" name="auctionId" value="{{ auction.getId() }}">
+                                                        <button type="submit" style="padding: 10px 15px; border-radius: 5px; background-color: #52E1AD; color: white; border: none;">
+                                                            Place Bid <i class="fa-solid fa-circle-check"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            {% else %}
+                                                <form action="{{ path('app_auction_edit', {'id': auction.id}) }}" method="POST">
+                                                    <button class="bid">
+                                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                                    </button>
+                                                </form>
+                                                <form action="{{ path('app_auction_delete', {'id': auction.id}) }}" method="POST">
+                                                    <button type="submit" class="details">
+                                                        <i class="fa-solid fa-ban"></i> Delete
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        {% else %}
+                                                <form action="{{ path('app_auction_edit', {'id': auction.id}) }}" method="POST">
+                                                    <button class="bid">
+                                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                                    </button>
+                                                </form>
+                                                <form action="{{ path('app_auction_delete', {'id': auction.id}) }}" method="POST">
+                                                    <button type="submit" class="details">
+                                                        <i class="fa-solid fa-ban"></i> Delete
+                                                    </button>
+                                                </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                                <div class="add-card">
+                                    <button class="add-auction-button" onclick="window.location.href='{{ path('app_auction_add') }}'">
+                                        <i class="fa-solid fa-circle-plus"></i>
+                                        <h3>Add Your Own Auction</h3>
+                                    </button>
+                                </div>
+                    </div>
+                {% endblock %}
+            </div>
+        </div> 
+    </div> 
+{% endblock %}

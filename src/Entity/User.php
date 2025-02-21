@@ -20,18 +20,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50 )]
     #[Assert\NotBlank(message: "First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
     private ?string $firstName = null;
 
-    #[Assert\NotBlank(message: "Last name is required.")]
-    #[Assert\Length(max: 50, maxMessage: "Last name cannot exceed 50 characters.")]
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50  )]
+    #[Assert\NotBlank(message: "First name is required.")]
+    #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
     private ?string $lastName = null;
 
     #[Assert\Length(max: 50, maxMessage: "Address cannot exceed 50 characters.")]
-    #[ORM\Column(length: 50 , nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)]
     private ?string $address = null;
 
     #[Assert\NotBlank(message: "Email is required.")]
@@ -46,7 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[Assert\Length(max: 100, maxMessage: "bio cannot exceed 100 characters.")]
-    #[ORM\Column(length: 100 , nullable: true)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $bio = null;
 
     #[ORM\Column(nullable: true)]
@@ -63,9 +63,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Bid::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $bids;
 
+    /**
+     * @var Collection<int, Artwork>
+     */
+    #[ORM\OneToMany(targetEntity: Artwork::class, mappedBy: 'user')]
+    private Collection $artworks;
+
     public function __construct()
     {
         $this->bids = new ArrayCollection();
+        $this->artworks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -213,6 +220,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email; // Use email as the unique identifier
+    }
+
+    /**
+     * @return Collection<int, Artwork>
+     */
+    public function getArtworks(): Collection
+    {
+        return $this->artworks;
+    }
+
+    public function addArtwork(Artwork $artwork): static
+    {
+        if (!$this->artworks->contains($artwork)) {
+            $this->artworks->add($artwork);
+            $artwork->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtwork(Artwork $artwork): static
+    {
+        if ($this->artworks->removeElement($artwork)) {
+            // set the owning side to null (unless already changed)
+            if ($artwork->getUser() === $this) {
+                $artwork->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 }
