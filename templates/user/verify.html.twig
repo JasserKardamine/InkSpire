@@ -1,0 +1,20 @@
+{% extends 'user/signin.html.twig' %}
+  
+
+{% block tochange %}
+    <div class="verfication-container">
+        <div class="verfication-page">
+            <h1>OTP Verification</h1>
+            <div class="the-verification-message">
+                <div class="verif-paragraph-holder">
+                    <h3>We've Sent a verification code to your email - jasserhav@gmail.com<h3>
+                </div>
+            </div>
+            <form class="action-form" action="{{ path('app_verify') }}" method="POST">
+                <input type="text" name="verification_code" placeholder="Enter Verification code " required/>
+                <button type="submit">Verify</button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

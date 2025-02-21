@@ -75,7 +75,7 @@ final class UserController extends AbstractController
 
 
     #[Route('/signup' , name: 'app_signup')]
-    public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher) {
+    public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher , SessionInterface $session,MailerInterface $mailer) {
         $user = new User() ; 
         $SignupForm = $this->createForm(SignupType::class,$user) ; 
         $SignupForm->handleRequest($request) ; 
@@ -87,13 +87,51 @@ final class UserController extends AbstractController
             $user->setTokens(10);
             $user->setRole(0) ; 
 
-            $this->entityManager->persist($user) ;
-            $this->entityManager->flush() ;
-            return $this->redirectToRoute('app_home');
+            $verificationCode = rand(100000, 999999); 
+            $session->set('verification_code', $verificationCode);
+            $session->set('temp_user', serialize($user));
+          
+
+            if ( $this->sendEmail($mailer,$user->getEmail(),$verificationCode) ) {
+                return $this->redirectToRoute('app_verify');
+            } else{
+                return $this->redirectToRoute('app_login');
+            }
+           
         }
         return $this->render('user/signup.html.twig', [
-            'form' => $SignupForm , 
+            'form' => $SignupForm->createView() , 
         ]);
+    }
+
+
+
+    #[Route('/verify', name: 'app_verify')]
+    public function verifyCode(Request $request, SessionInterface $session): Response
+    {
+        $user = unserialize($session->get('temp_user')); 
+        $correctCode = $session->get('verification_code');
+
+        if (!$user || !$correctCode) {
+            return $this->redirectToRoute('app_signup'); 
+        }
+
+        if ($request->isMethod('POST')) {
+            $enteredCode = $request->request->get('verification_code');
+
+            if ($enteredCode == $correctCode) {
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+
+                // Clear session data
+                $session->remove('verification_code');
+                $session->remove('temp_user');
+
+                return $this->redirectToRoute('app_signin'); 
+            } 
+        }
+
+        return $this->render('user/verify.html.twig');
     }
 
 

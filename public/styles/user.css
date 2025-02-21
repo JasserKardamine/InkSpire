@@ -612,3 +612,77 @@
 .edit-select-list a {
     text-decoration: none;
 }
+
+
+/*verification page styling */
+
+.verfication-container{
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-image: url('/images/bg1.png');
+    background-size: cover; 
+    background-position: center;  
+    background-repeat: no-repeat;  
+    min-height: 100vh;
+    overflow: hidden;
+    font-family: devioussans02extrabold, "Helvetica Neue", Helvetica, Arial, メイリオ, meiryo, "ヒラギノ角ゴ pro w3", hiragino kaku gothic pro, sans-serif;
+    font-weight: 400;
+}
+.verfication-page{
+    width: 28%;
+    height: auto ; 
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #18181C
+}
+
+.verfication-page h1 {
+    font-size: 35px;
+    color: white;
+}
+
+
+.verfication-page form input {
+    border-radius: 5px;
+    padding: 16px 10px 16px 10px ;
+    background-color: #101014 ; 
+    border: 1px solid #303034 ; 
+    color: white;
+}
+
+.verfication-page form button {
+    padding: 16px 10px 16px 10px ;
+    border-radius: 5px;
+    margin-bottom: 50px;
+}
+
+.the-verification-message{
+    width: 80%;
+    height: 100px; 
+    background-color:#a7c3e6 ; 
+    margin-bottom: 15px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verif-paragraph-holder{
+    width: 80%;
+}
+
+.verif-paragraph-holder h3 {
+  line-height: 1.5;
+  font-weight: 500;
+  font-size: 17px;
+  color:rgb(14, 75, 150) ; 
+}
