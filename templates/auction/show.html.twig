@@ -2,6 +2,22 @@
 {% block title %}
     Inkspire - Auction
 {% endblock %}
+{% block actionblock %}
+    {% if user.id is not null %}
+        <div class="home-profile-pic-div">
+            <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
+            <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
+            <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
+           
+        </div>    
+    {% else %}
+        <div class="auth-buttons">
+            <a href="{{ path('app_signup')}}" class="signup-button" id="signup-button" ><i class="fa-solid fa-pen"></i>Sign Up</a>                
+            <a href="{{ path('app_signin')}}" class="login-button" id="login-button"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a>
+        </div>
+    {% endif %}
+{% endblock %}
 {% block tochange %}
     <div class="content">
         <div class="wallpaper">

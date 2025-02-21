@@ -41,6 +41,7 @@ final class BidController extends AbstractController
         $bids = $this->bidRepository->findBy(['user' => $user]);
         return $this->render('bid/show.html.twig', [
             'bids' => $bids,
+            'user' => $user,
         ]);
     }
     #[Route('/bid/add', name: 'app_bid_add')]

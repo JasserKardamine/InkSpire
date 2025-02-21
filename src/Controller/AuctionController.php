@@ -93,6 +93,7 @@ final class AuctionController extends AbstractController
         return $this->render('auction/add.html.twig', [
             'form' => $form->createView(),
             'filterType' => $request->query->getInt('type', 1),
+            'user' => $user,
         ]);
     }
     #[Route('/edit/{id}', name: 'app_auction_edit')]
@@ -128,6 +129,7 @@ final class AuctionController extends AbstractController
             'form' => $form->createView(),
             'auction' => $auction,
             'filterType' => $request->query->getInt('type', 1),
+            'user' => $user,
         ]);
     }
     #[Route('/delete/{id}', name: 'app_auction_delete')]

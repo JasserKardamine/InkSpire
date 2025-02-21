@@ -1,0 +1,43 @@
+{% extends 'user/signin.html.twig' %}
+  
+
+{% block tochange %}
+    <form action="{{path('app_verify')}}" method ="POST">
+        <div class="login-container  ">
+            <div class="login-card verification">
+                <div class="image-container-verification verify-image-container">
+                    <div class="image-title">
+                        <h1>JOIN THE LARGEST ART COMMUNITY IN THE WORLD</h1>
+                    </div>
+                    <div class="image-paragraph">
+                        <p>Get free access to 650 million pieces of art. Showcase, promote, sell, and share your work with over 100 million members.</p>
+                    </div>
+                </div>
+
+                <div class="form-container-verification">
+                    <div class="close-btn ">
+                        <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                    </div>
+                    <div class="form-title">
+                        <h1>Confirm Your Email</h1>
+                    </div>
+                    <div class="verification-manual">
+                        <div class="verification-email"><p>We've sent you an email to</p><p class="email">jasserhav@gmail.com</p></div>
+                        <div class="manual"><p>Write down the code you recieved the participate in the worlds largest art community. Submit artwork, Intteract in the comments and more </p></div>
+                    </div>
+                    
+                    <div class="otp-verification-input">
+                        <input name="1" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                        <input name="2" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                        <input name="3" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                        <input name="4" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                        <input name="5" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                        <input name="6" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
+                    <div>
+                </div>
+            </div>
+            <div class="verification-buton"><button type="submit">Confirm</button></div>
+        </div>  
+        </form>
+        <script src="./script/confimation.js"></script>
+{% endblock %}

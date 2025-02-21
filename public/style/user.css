@@ -57,7 +57,10 @@
 
 .signup-image-container{
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/toji.jpg);
+}
 
+.verify-image-container{
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/images/crystals.jpg);
 }
 
 .image-title{
@@ -102,7 +105,7 @@
 
 .form-title{
     width: 80%;
-    height: 140px;
+    height: 100px;
 }
 
 .form-title h1 {
@@ -123,7 +126,7 @@
     display: flex;
     width: 80%;
     flex-direction: column;
-    gap: 3px;
+    gap: 15px;
 }
 
 .action-form  input {
@@ -133,7 +136,6 @@
     border: 1px solid #C9CACF ; 
     background-color: #FAFAFA;
     border-radius: 3px;
-    margin-bottom: 15px;
 }
 .action-form label{
     font-size: 13px;
@@ -151,6 +153,23 @@
     font-weight: 600;
     width: 100%;
 }
+
+.action-form-row{
+    display: flex;
+    flex-direction: column;
+}
+.action-form ul {
+    margin:0; 
+    padding: 0;
+}
+
+.action-form ul li {
+    font-size: 13px;
+    font-weight: 600;
+    color: red;
+    list-style-type: none;
+}
+
 
 .forget-password-div a {
     text-align: right;
@@ -212,7 +231,7 @@
     background-color: white; 
 }
 
-.google-btn {
+.api-btn {
     position: relative; 
     padding: 12px 10px;  
     background-color: #F8FAFF; 
@@ -222,14 +241,522 @@
     cursor: pointer;
     font-size: 13px;
     display: flex;
+    margin-bottom: 10px;
     align-items: center;
     justify-content: center;
     font-weight: 500;
 }
 
-.google-btn img {
+.api-btn img {
     position: absolute;
     right: 10px; 
     width: 20px;
     height: auto;
+}
+
+
+/* Profile Styling */
+
+.profile-div{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+.Portfolio-container{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 100vh;
+    scroll-behavior: smooth;
+    width: 78%;
+}
+
+
+.Portfolio-container .top-collections-container a {
+    width: calc(32% - 1px); 
+    aspect-ratio: 2 / 1.2;
+    height: auto ; 
+    max-width: 100%; 
+    overflow: hidden;
+}
+
+
+.Portfolio-container .container-title {
+    color:white ; 
+    margin: 20px 0 0 30px;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.Portfolio-container .special-container {
+    margin: 0;
+}
+
+.Portfolio-container .top-artwork-container a {
+    width: calc(17% - 17px); 
+    height: auto ; 
+    max-width: 100%; 
+    aspect-ratio: 1 / 1;
+}
+
+.Profile-container{
+    width: 22% ; 
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    flex-direction: column;
+}
+
+.Profile  {
+    margin-top: 70px;
+    background-color: #202024;
+    border-radius: 15px;
+    width: 90%;
+    height: 91vh;
+}
+
+.Profile-image{
+    height: 22%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.Profile-image img {
+    width: 150px;
+    object-fit: cover;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.Profile-name{
+    width: 100%;
+    height: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.Profile-name h1 {
+    color: white;
+    font-weight: 700;
+}
+
+.Profile-name p {
+    color: #909094;
+}
+
+.Profile-action{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    gap: 20px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.Profile-action a {
+    text-decoration: none;
+    padding: 10px 17px 10px 17px ;
+    border-radius: 8px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Profile-action-edit{
+    background-color:#1F7EF3 ; 
+    color: black;
+    transition: background-color 0.2s ease-in-out;
+}
+.Profile-action-edit:hover{
+    background-color:rgb(53, 142, 250);
+} 
+
+.Profile-action-logout{
+    background-color:#606064 ; 
+    color: white;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.Profile-action-logout:hover {
+    background-color:rgb(122, 122, 122);
+}
+
+/*edit styling */
+.main-edit-container{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.edit-select-contianer{
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.edit-select-img{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.edit-select-info{
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.edit-select-info h1{
+    color: white;
+    font-size: 23px;
+}
+
+.edit-select-info h3{
+    color : #707074 ; 
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.edit-select-info p{
+    color : #707074 ; 
+    font-weight: 400;
+    font-size: 14px;
+}
+
+
+
+.edit-select img {
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.edit-select {
+    height: 80vh;
+    width: 50%;
+}
+
+.edit-card-container{
+    width: 70%;
+    height: 80vh;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.edit-card{
+    width: 770px ; 
+    height: 155vh  ; 
+    display: flex;
+    flex-direction: column;
+}
+.edit-Title{
+    width: 100%;
+    height: 160px ; 
+    min-height: 100px;
+    max-height: 200px;
+    background-color: #303034;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.edit-Title h1 {
+    color: white;
+    font-weight: 600;
+    padding: 15px 0 0 25px;
+}
+
+.edit-Title p {
+    font-size: 15px;
+    color: #A3A3A8 ; 
+    padding: 0 0 0 25px;
+}
+
+.edit-action-div{
+    width: 100%;
+    height: 150px;
+    border-bottom: 1px solid #303034;
+    background-color: #18181C;
+    display: flex;
+    flex-direction: row;
+}
+
+.edit-action-div-password {
+    width: 100%;
+    height: 200px;
+    border-bottom: 1px solid #303034;
+    background-color: #18181C;
+    display: flex;
+    flex-direction: row;
+}
+
+.edit-column-title{
+    width: 36%;
+    display: flex;
+    align-items: center;
+}
+
+.edit-column-title div {
+    width: 60%;
+    padding-left: 30px;
+    text-align: left;
+    margin-left: 10px;
+}
+
+.edit-column-title div h2{
+    font-size: 17px;
+    font-weight: 500;
+    color: white;
+}
+
+.edit-column-title div p{
+    padding-top: 5px;
+    color: #BEBEC2;
+    font-weight: 400;
+    font-size: 14px;
+}
+.edit-column-input{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 64%;
+}
+
+
+.edit-column-input input {
+    padding: 8px 10px 8px 10px;
+    background-color: #101014 ; 
+    width: 80%;
+    border: 1px solid #303034;
+    color: white;
+    outline: none;
+}
+
+.extra-space{
+    height: 400px;
+    width: 100%;
+    background-color: #101014;
+}
+
+.edit-danger-zone{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    width: 64%;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.edit-danger-zone a {
+   margin: 0 20px 60px 0;
+   text-decoration: none;
+   color: red;
+   font-size: 14px;
+   font-weight: 400;
+}
+
+.edit-column-input textarea {
+    background-color: #101014; 
+    width: 82%;
+    padding: 10px 0 0 10px;
+    border: 1px solid #303034;
+    color: white;
+    outline: none; 
+    resize: none; 
+}
+
+
+.edit-danger-zone button {
+    padding: 7px 14px 7px 14px ;
+    background-color:rgb(41, 89, 184) ; 
+    border: 0;
+    border-radius: 3px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.2s ease-out;
+}
+
+.edit-danger-zone button:hover  {
+    background-color:rgb(50, 87, 161)  ; 
+}
+
+.edit-form ul {
+    margin:0; 
+    padding: 0;
+}
+
+.edit-form ul li {
+    font-size: 13px;
+    font-weight: 600;
+    color: red;
+    list-style-type: none;
+}
+
+.edit-form-componment{
+    width: 100%;
+}
+.edit-form-componment-password{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.edit-form-componment-password button{
+    width: 70px;
+    padding: 6px 16px 6px 10px ;
+    cursor: pointer;
+    background-color: rgb(3, 70, 151);
+    border: 0 ;
+    color: white;
+    transition: background-color 0.2s ease-in-out;
+}
+
+
+.edit-form-componment-password button:hover{
+    background-color:rgb(37, 91, 156);
+}
+
+
+.edit-select-list{
+    width: 83%;
+    margin-left: 20px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.edit-select-list a {
+    text-decoration: none;
+    padding : 10px  0 10px 30px ;
+    font-size: 16px;
+    color: #BEBEC2;
+    transition: color 0.2s ease-in, background-color 0.2s ease-in;
+}
+
+.edit-select-list a:hover {
+    color: white ; 
+    background-color: #18181C;
+}
+
+
+
+/*verification page styling */
+
+.verification{
+    height: 70vh ;
+    width: 60%;
+}
+
+.image-container-verification{ 
+    background-position:center; 
+    background-size: cover;
+    width: 36%;
+    overflow: hidden;
+    height: 100%;
+    background-repeat: no-repeat;  
+}
+
+.form-container-verification{
+    width: 64%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.form-container-verification h1 {
+    font-size: 37px;
+    letter-spacing: 1px;
+}
+
+.verification-manual{
+    width: 79%;
+}
+
+.verification-email{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.verification-email .email{
+    font-weight: 600;
+} 
+
+.verification-manual .manual
+{
+    width: 80%;
+}
+.verification-manual .manual p{
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+.otp-verification-input{
+    margin-top: 50px;
+    height: 30%;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.otp-verification-input input {
+    width: 60px;
+    height: 60px;
+    outline: none;
+    border-radius: 6px;
+    font-size: 40px;
+    border: 0;
+    text-align: center;  
+    vertical-align: middle;
+    box-shadow:
+    0px 0px 0.9px rgba(0, 0, 0, 0.02),
+    0px 0px 2.2px rgba(0, 0, 0, 0.028),
+    0px 0px 4.1px rgba(0, 0, 0, 0.035),
+    0px 0px 7.4px rgba(0, 0, 0, 0.042),
+    0px 0px 13.8px rgba(0, 0, 0, 0.05),
+    0px 0px 33px rgba(0, 0, 0, 0.07);
+}
+
+.verification-buton{
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.verification-buton button {
+    background-color: #0071F9;
+    border: 0;
+    padding: 10px 20px 10px 20px;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+
+.verification-buton button:hover {
+    background-color:rgb(31, 126, 243);
+    transform: scale(1.1);
 }

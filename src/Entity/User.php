@@ -6,7 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Validator\Emailexist ;
+use App\Validator\Passwordvalid ;
+use App\Validator\Namevalid ;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -21,41 +25,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 50 )]
-    #[Assert\NotBlank(message: "First name is required.")]
+    #[Assert\NotBlank(message: "* First name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Namevalid(message : '* Invalid Firstname !')]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 50  )]
-    #[Assert\NotBlank(message: "First name is required.")]
+    #[Assert\NotBlank(message: "* Last name is required.")]
     #[Assert\Length(max: 50, maxMessage: "First name cannot exceed 50 characters.")]
+    #[Namevalid(message : '* Invalid Lastname !')]
     private ?string $lastName = null;
 
-    #[Assert\Length(max: 50, maxMessage: "Address cannot exceed 50 characters.")]
+    #[Assert\Length(max: 50, maxMessage: "* Address cannot exceed 50 characters.")]
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $address = null;
 
-    #[Assert\NotBlank(message: "Email is required.")]
-    #[Assert\Email(message: "Invalid email format.")]
-    #[Assert\Length(max: 50, maxMessage: "Email cannot exceed 50 characters.")]
+    #[Assert\NotBlank(message: "* Email is required.")]
+    #[Assert\Email(message: "* Invalid email format.")]
+    #[Assert\Length(max: 50, maxMessage: "* Email cannot exceed 50 characters.")]
     #[ORM\Column(length: 50)]
     private ?string $email = null;
 
-    #[Assert\NotBlank(message: "Password is required.")]
-    #[Assert\Length(min: 8, max: 100, minMessage: "Password must be at least 8 characters long.")]
+    #[Assert\NotBlank(message: "* Password is required.")]
+    #[Assert\Length(min: 8, max: 100, minMessage: "* Password must be at least 8 characters long.")]
     #[ORM\Column(length: 100)]
     private ?string $password = null;
 
-    #[Assert\Length(max: 100, maxMessage: "bio cannot exceed 100 characters.")]
+    #[Assert\Length(max: 100, maxMessage: "* bio cannot exceed 100 characters.")]
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $bio = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\PositiveOrZero(message: "Tokens must be a positive number or zero.")]
+    #[Assert\PositiveOrZero(message: "* Tokens must be a positive number or zero.")]
     private ?int $tokens = null;
 
+    #[ORM\Column]
+    private ?int $role = null;
+
     #[ORM\Column(length: 100, nullable: true)]
-    #[Assert\Url(message: "Picture must be a valid URL.")]
+    //#[Assert\Url(message: "* Picture must be a valid URL.")]
     private ?string $picture = null;
+
+    
+    // seperate form validation ( easy peasy )
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('email', new Assert\NotBlank([
+            'groups' => ['signin'],
+            'message' => 'Email is required!'
+        ]));
+
+        $metadata->addPropertyConstraint('email', new Emailexist('strict',['signin'], null));
+
+        $metadata->addPropertyConstraint('email', new Assert\Email([
+            'groups' => ['signin'],
+            'message' => 'Please enter a valid email address.'
+        ]));
+        
+        $metadata->addPropertyConstraint('password', new Assert\NotBlank([
+            'groups' => ['signin'],
+            'message' => 'Password is required!'
+        ]));
+        $metadata->addPropertyConstraint('password', new Assert\Length([
+            'min' => 6,
+            'minMessage' => 'Your password should be at least {{ limit }} characters.',
+            'max' => 50,
+            'maxMessage' => 'Your password should not be longer than {{ limit }} characters.',
+            'groups' => ['signin']
+        ]));
+
+        $metadata->addPropertyConstraint('password', new Passwordvalid('email', 'strict', ['signin'], null));
+
+    }
 
     /**
      * @var Collection<int, Bid>
@@ -240,7 +281,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeArtwork(Artwork $artwork): static
+    public function removeArtwork(Artwork $artwork): void
     {
         if ($this->artworks->removeElement($artwork)) {
             // set the owning side to null (unless already changed)
@@ -248,8 +289,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $artwork->setUser(null);
             }
         }
+    }
+    public function getRole(): ?int
+    {
+        return $this->role;
+    }
+    public function setRole(int $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }
-
 }
