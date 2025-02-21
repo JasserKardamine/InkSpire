@@ -6,7 +6,7 @@
             <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
             <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
             <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
-            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture"> </a>
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
            
         </div>    
     {% else %}
@@ -101,7 +101,7 @@
 
         <div class="Profile-container">
             <div class="Profile">
-                <div class="Profile-image"> <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture"> </div>
+                <div class="Profile-image"> <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </div>
 
                 <div class="Profile-name">
                     <h1>{{ user.firstName ~ '   ' ~ user.lastName }}</h1>

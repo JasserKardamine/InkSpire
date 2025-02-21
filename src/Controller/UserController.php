@@ -34,8 +34,10 @@ final class UserController extends AbstractController
              $email = (new Email())
                  ->from('support@eInkSpire.com')
                  ->to($destination)
+                 ->priority(Email::PRIORITY_HIGH)
                  ->subject('Verify your account!')
                  ->text($content);
+                 
      
              $mailer->send($email); 
              return true; 
@@ -213,7 +215,7 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/canelacc' , name : 'cancelacc_app')]
+    #[Route('/canelacc' , name : 'app_cancelacc')]
     public function CacelAccount(SessionInterface $session) {
         $userid = $session->get("UserId",null) ; 
         $user = $this->entityManager->getRepository(User::class)->find($userid); 
@@ -225,4 +227,37 @@ final class UserController extends AbstractController
         $session->clear() ; 
         return $this->redirectToRoute('app_home');
     }  
+
+
+
+    #[Route('/changepass', name: "app_change_password")]
+    public function ChangePassword(SessionInterface $session, Request $request, UserPasswordHasherInterface $passwordHasher) {
+        $userid = $session->get("UserId", null);
+        $user = $this->entityManager->getRepository(User::class)->find($userid);
+    
+        if (!$user) {
+            return $this->redirectToRoute('app_signin');
+        }
+    
+        if ($request->isMethod('POST')) {
+            $password = $request->request->get('password');
+            $confirmation = $request->request->get('confirmpassword');
+
+
+            if ($password === $confirmation) {
+                $hashedPassword = $passwordHasher->hashPassword($user, $password);
+                $user->setPassword($hashedPassword);
+    
+                $this->entityManager->flush(); 
+    
+                return $this->redirectToRoute('app_edit');
+            }
+        }
+    
+        return $this->render('user/changepassword.html.twig', [
+            'user' => $user,
+        ]);
+    }
+    
+
 }

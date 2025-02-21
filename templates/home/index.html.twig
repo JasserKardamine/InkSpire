@@ -7,7 +7,7 @@
             <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
             <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
             <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
-            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset('uploads/pictures/' ~ user.picture) }}" alt="Profile Picture"> </a>
+            <a href="{{ path('app_profile') }}" class="home-profile-picture">  <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
            
         </div>    
     {% else %}

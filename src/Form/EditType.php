@@ -36,10 +36,6 @@ class EditType extends AbstractType
                 'label' => 'Email',
                 'empty_data' => ''
             ])
-            ->add('password', PasswordType::class, [
-                'label' => 'Password',
-                'empty_data' => ''
-            ])
             ->add('bio', TextareaType::class, [
                 'label' => 'Bio',
                 'attr' => [
