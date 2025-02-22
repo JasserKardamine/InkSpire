@@ -250,7 +250,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER']; // Example role
+        return $this->role === 0 ? ['ROLE_ADMIN'] : ['ROLE_USER'];
     }
 
     public function getUserIdentifier(): string

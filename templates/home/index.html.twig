@@ -7,7 +7,7 @@
             <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
             <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
             <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
-            <a href="{{ path('app_profile') }}" class="home-profile-picture">  <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
+            <a href="{{ path('app_profile') }}" class="home-profile-picture">  <img src="{{ asset(user.picture ? 'uploads/ProfilePictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
            
         </div>    
     {% else %}
@@ -18,7 +18,17 @@
     {% endif %}
 {% endblock %}
 
-
+{% block linkers %}
+    {% if user is  null %}
+        <div class="linkers-blank-space"></div>
+    {% else %}
+        <ul>
+            <li><a href="{{ path('app_home') }}">Explore</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Auctions</a></li>
+        </ul>
+    {% endif %}
+{% endblock %}
 
 {% block tochange %}
     {# action buttons #}

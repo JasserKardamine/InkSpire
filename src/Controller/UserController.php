@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User ;
+use App\Form\ChangepasswordType;
 use App\Form\EditType;
 use App\Form\SigninType;
 use App\Form\SignupType;
@@ -97,7 +98,7 @@ final class UserController extends AbstractController
             if ( $this->sendEmail($mailer,$user->getEmail(),$verificationCode) ) {
                 return $this->redirectToRoute('app_verify');
             } else{
-                return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_signin');
             }
            
         }
@@ -113,7 +114,7 @@ final class UserController extends AbstractController
     {
         $user = unserialize($session->get('temp_user')); 
         $correctCode = $session->get('verification_code');
-
+        
         if (!$user || !$correctCode) {
             return $this->redirectToRoute('app_signup'); 
         }
@@ -140,7 +141,9 @@ final class UserController extends AbstractController
             } 
         }
 
-        return $this->render('user/verify.html.twig',['user' => $user]);
+        return $this->render('user/verify.html.twig',[
+            'user' => $user
+        ]);
     }
 
 
@@ -176,7 +179,7 @@ final class UserController extends AbstractController
 
 
     #[Route('/edit' , name : 'app_edit')]
-    public function UserEdit(SessionInterface $session , Request $request , UserPasswordHasherInterface $passwordHasher) : Response
+    public function UserEdit(SessionInterface $session , Request $request ) : Response
     {   
         $userid = $session->get('UserId') ; 
         $user = $this->entityManager->getRepository(User::class)->find($userid) ; 
@@ -204,7 +207,7 @@ final class UserController extends AbstractController
             } 
         } 
         else{
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_signin');
         }
 
         return $this->render('user/edit.html.twig',[
@@ -229,7 +232,6 @@ final class UserController extends AbstractController
     }  
 
 
-
     #[Route('/changepass', name: "app_change_password")]
     public function ChangePassword(SessionInterface $session, Request $request, UserPasswordHasherInterface $passwordHasher) {
         $userid = $session->get("UserId", null);
@@ -239,23 +241,31 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_signin');
         }
     
-        if ($request->isMethod('POST')) {
-            $password = $request->request->get('password');
-            $confirmation = $request->request->get('confirmpassword');
-
-
-            if ($password === $confirmation) {
-                $hashedPassword = $passwordHasher->hashPassword($user, $password);
-                $user->setPassword($hashedPassword);
+        $ChangePasswordForm = $this->createForm(ChangepasswordType::class, null);
+        $ChangePasswordForm->handleRequest($request);
     
-                $this->entityManager->flush(); 
+        if ($ChangePasswordForm->isSubmitted() && $ChangePasswordForm->isValid()) {
+            $formData = $ChangePasswordForm->getData();
     
-                return $this->redirectToRoute('app_edit');
+            $currentpassword = $formData['currentpassword'];
+            $newpassword = $formData['newpassword'];
+            $confirmation = $formData['confirmpassword'];
+    
+            if ($passwordHasher->isPasswordValid($user, $currentpassword)) {
+                if ($newpassword === $confirmation) {
+                    $hashedPassword = $passwordHasher->hashPassword($user, $newpassword);
+                    $user->setPassword($hashedPassword);
+    
+                    $this->entityManager->flush();
+    
+                    return $this->redirectToRoute('app_edit');
+                }
             }
         }
     
         return $this->render('user/changepassword.html.twig', [
-            'user' => $user,
+            'form' => $ChangePasswordForm->createView(),
+            'user' => $user
         ]);
     }
     

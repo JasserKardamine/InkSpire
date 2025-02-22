@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block actionblock %}
-    {% if user.id is not null %}
+    {% if user is not null %}
         <div class="home-profile-pic-div">
             <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
             <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
             <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
-            <a href="{{ path('app_profile') }}" class="home-profile-picture"><img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"><img src="{{ asset(user.picture ? 'uploads/ProfilePictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
            
         </div>    
     {% else %}
@@ -23,7 +23,7 @@
     <div class="edit-select-contianer">
         <div class="edit-select">
             <div class="edit-select-img">
-              <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture">
+              <img src="{{ asset(user.picture ? 'uploads/ProfilePictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture">
               <div class="edit-select-info">
                   <h3>SETTINGS</h3>
                   <h1>{{ user.firstName ~ ' ' ~ user.lastName }}</h1>
@@ -34,6 +34,7 @@
                 <a href="{{ path('app_profile') }}">profile</a>
                 <a href="{{ path('app_edit')}}">Account</a>
                 <a href="{{ path('app_change_password') }}">Password</a>
+                <a id="logout"href="{{ path('app_logout') }}">Log out </a>
             </div>
         </div>
     </div>
