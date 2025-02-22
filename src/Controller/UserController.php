@@ -53,6 +53,7 @@ final class UserController extends AbstractController
     #[Route('/signin', name: 'app_signin')]
     public function SignIn(Request $request,SessionInterface $session,UserPasswordHasherInterface $passwordHasher): Response
     {
+        
         $SigninForm = $this->createForm(SigninType::class) ;
         $SigninForm->handleRequest($request) ;
         
@@ -149,13 +150,10 @@ final class UserController extends AbstractController
 
 
     #[Route('/logout' , name : 'app_logout')]
-    public function UserLogout(SessionInterface $session) : Response
+    public function UserLogout(SessionInterface $session): Response
     {   
-        $userid = $session->get('UserId') ; 
-        if($userid) {
-            $session->clear() ; 
-        }
-        return $this->redirectToRoute('app_home');
+        $session->invalidate(); 
+        return $this->redirectToRoute('app_signin');
     }
 
 
@@ -163,8 +161,11 @@ final class UserController extends AbstractController
     #[Route('/Profile' , name : 'app_profile')]
     public function UserProfile(SessionInterface $session) : Response
     {   
-        $userid = $session->get('UserId') ; 
-        $user = $this->entityManager->getRepository(User::class)->find($userid) ;
+        $userid = $session->get('UserId');
+    
+        if (!$userid || !($user = $this->entityManager->getRepository(User::class)->find($userid))) {
+            return $this->redirectToRoute('app_signin');
+        }
 
         if($user) {
             return $this->render('user/profile.html.twig',[
@@ -174,48 +175,50 @@ final class UserController extends AbstractController
         }else{
             return $this->redirectToRoute('app_home');
         }
-        }
-
-
-
-    #[Route('/edit' , name : 'app_edit')]
-    public function UserEdit(SessionInterface $session , Request $request ) : Response
-    {   
-        $userid = $session->get('UserId') ; 
-        $user = $this->entityManager->getRepository(User::class)->find($userid) ; 
-
-        if($user){
-            $EditForm = $this->createForm(EditType::class,$user) ; 
-            $EditForm->handleRequest($request) ; 
-            if($EditForm->isSubmitted() && $EditForm->isValid()) {
-                
-                $file = $EditForm->get('picture')->getData();
-                if ($file) {
-                    $uploadsDirectory = $this->getParameter('uploads_directory');
-                    $newFilename = uniqid().'.'.$file->guessExtension();
-        
-                    try {
-                        $file->move($uploadsDirectory, $newFilename);
-                        $user->setPicture($newFilename); 
-                    } catch (FileException $e) {
-                        throw new FileException("url not valid !") ;  
-                    }
-                }
-
-                $this->entityManager->flush() ; 
-                return $this->redirectToRoute('app_profile');
-            } 
-        } 
-        else{
-            return $this->redirectToRoute('app_signin');
-        }
-
-        return $this->render('user/edit.html.twig',[
-            'user'=>$user ,
-            'form' => $EditForm->createView() , 
-        ]);
     }
 
+
+
+    #[Route('/edit', name: 'app_edit')]
+    public function UserEdit(SessionInterface $session, Request $request): Response
+    {
+       
+        $userid = $session->get('UserId');
+    
+        if (!$userid || !($user = $this->entityManager->getRepository(User::class)->find($userid))) {
+            return $this->redirectToRoute('app_signin');
+        }
+    
+        
+        $EditForm = $this->createForm(EditType::class, $user);
+        $EditForm->handleRequest($request);
+    
+        if ($EditForm->isSubmitted() && $EditForm->isValid()) {
+           
+            $file = $EditForm->get('picture')->getData();
+            if ($file) {
+                try {
+                    $uploadsDirectory = $this->getParameter('uploads_directory');
+                    $newFilename = uniqid().'.'.$file->guessExtension();
+                    $file->move($uploadsDirectory, $newFilename);
+                    $user->setPicture($newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'File upload failed. Please try again.');
+                    return $this->redirectToRoute('app_edit');
+                }
+            }
+    
+            $this->entityManager->flush(); 
+            return $this->redirectToRoute('app_profile');
+        }
+    
+
+        return $this->render('user/edit.html.twig', [
+            'form' => $EditForm->createView(),
+            'user' => $user
+        ]);
+    }
+    
 
 
     #[Route('/canelacc' , name : 'app_cancelacc')]

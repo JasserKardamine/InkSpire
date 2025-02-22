@@ -12,6 +12,11 @@ security:
         main:
             lazy: true
             provider: users_in_memory
+            logout:
+                path: app_logout
+                target: app_signin
+                
+              
 
 
     access_control:
