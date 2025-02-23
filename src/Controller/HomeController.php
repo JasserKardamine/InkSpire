@@ -23,12 +23,14 @@ final class HomeController extends AbstractController
     {
         $userid = $session->get('UserId',null) ; 
 
-
-        $user = null;
-        if ($userid !== null) {
-            $user = $this->entityManager->getRepository(User::class)->find($userid);
+        if(!$userid){
+            return $this->render('home/index.html.twig',[
+                'user' => null ,  
+            ]);
         }
-
+   
+        $user = $this->entityManager->getRepository(User::class)->find($userid);
+    
         return $this->render('home/index.html.twig', [
             'user' => $user , 
         ]);

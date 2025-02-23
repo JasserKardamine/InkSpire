@@ -28,6 +28,22 @@ final class UserController extends AbstractController
          $this->entityManager = $entityManager;
      }
 
+    // access function (tab3a admin ) 
+    private function redirectIfUser(SessionInterface $session): ?Response
+    {
+        $userid = $session->get('UserId');
+        if (!$userid) {
+            return $this->redirectToRoute('app_signin'); 
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($userid);
+
+        if ($user && $user->getRole() === 1) { 
+            return $this->redirectToRoute('app_loginadmin');
+        }
+        return null;
+    }
+
 
      public function sendEmail(MailerInterface $mailer, string $destination, string $content): bool 
      {
@@ -49,40 +65,49 @@ final class UserController extends AbstractController
      }
      
 
+     #[Route('/signin', name: 'app_signin')]
+     public function SignIn(Request $request, SessionInterface $session, UserPasswordHasherInterface $passwordHasher): Response
+     {
+         $form = $this->createForm(SigninType::class);
+         $form->handleRequest($request);
 
-    #[Route('/signin', name: 'app_signin')]
-    public function SignIn(Request $request,SessionInterface $session,UserPasswordHasherInterface $passwordHasher): Response
-    {
-        
-        $SigninForm = $this->createForm(SigninType::class) ;
-        $SigninForm->handleRequest($request) ;
-        
-        if($SigninForm->isSubmitted() && $SigninForm->isValid()) {
-            
-            $email = $SigninForm->get('email')->getData() ; 
-            $password = trim($SigninForm->get('password')->getData()) ;  
-            
-            $SessionUser = $this->entityManager->getRepository(User::class)->findOneBy(['email'=> $email])  ;  
-            
-            if($SessionUser){
-                if($passwordHasher->isPasswordValid($SessionUser,$password)) {
-                    $session->set('UserId',$SessionUser->getId()) ; 
-                    return $this->redirectToRoute('app_home');
-                }
-            }
-        }
-        return $this->render('user/signin.html.twig', [
-            'form' => $SigninForm,
-        ]);
-    }
+         if($session->has("UserId")) {
+            return $this->redirectToRoute('app_home');
+         }
+
+         if (!$form->isSubmitted() || !$form->isValid()) {
+             return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
+         }
+     
+         $email = $form->get('email')->getData();
+         $password = trim($form->get('password')->getData());
+         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+     
+         if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
+             return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
+         }
+         if ($user->getRole() === 0 && $user->getStatus() === 1) {
+             $session->set('UserId', $user->getId());
+             return $this->redirectToRoute('app_home');
+         }
+
+         return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
+     }
+     
 
 
 
     #[Route('/signup' , name: 'app_signup')]
     public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher , SessionInterface $session,MailerInterface $mailer) {
+
+        
         $user = new User() ; 
         $SignupForm = $this->createForm(SignupType::class,$user) ; 
         $SignupForm->handleRequest($request) ; 
+
+        if($session->has("UserId")) {
+            return $this->redirectToRoute('app_home');
+         }
 
         if($SignupForm->isSubmitted() && $SignupForm->isValid()) { 
             
@@ -90,6 +115,7 @@ final class UserController extends AbstractController
             $user->setPassword($hashedPassword);
             $user->setTokens(10);
             $user->setRole(0) ; 
+            $user->setStatus(1) ; 
 
             $verificationCode = rand(100000, 999999); 
             $session->set('verification_code', $verificationCode);
@@ -161,6 +187,10 @@ final class UserController extends AbstractController
     #[Route('/Profile' , name : 'app_profile')]
     public function UserProfile(SessionInterface $session) : Response
     {   
+        if ($redirect = $this->redirectIfUser($session)) {
+            return $redirect;
+        }
+
         $userid = $session->get('UserId');
     
         if (!$userid || !($user = $this->entityManager->getRepository(User::class)->find($userid))) {
@@ -183,6 +213,10 @@ final class UserController extends AbstractController
     public function UserEdit(SessionInterface $session, Request $request): Response
     {
        
+        if ($redirect = $this->redirectIfUser($session)) {
+            return $redirect;
+        }
+
         $userid = $session->get('UserId');
     
         if (!$userid || !($user = $this->entityManager->getRepository(User::class)->find($userid))) {
@@ -223,6 +257,11 @@ final class UserController extends AbstractController
 
     #[Route('/canelacc' , name : 'app_cancelacc')]
     public function CacelAccount(SessionInterface $session) {
+
+        if ($redirect = $this->redirectIfUser($session)) {
+            return $redirect;
+        }
+
         $userid = $session->get("UserId",null) ; 
         $user = $this->entityManager->getRepository(User::class)->find($userid); 
 
@@ -237,6 +276,11 @@ final class UserController extends AbstractController
 
     #[Route('/changepass', name: "app_change_password")]
     public function ChangePassword(SessionInterface $session, Request $request, UserPasswordHasherInterface $passwordHasher) {
+
+        if ($redirect = $this->redirectIfUser($session)) {
+            return $redirect;
+        }
+
         $userid = $session->get("UserId", null);
         $user = $this->entityManager->getRepository(User::class)->find($userid);
     

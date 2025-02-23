@@ -843,4 +843,51 @@
 }
 
 
+/*admin login styling */
 
+.login-card-admin{
+    margin-top: 100px;
+    width: 25%;
+    height: 50vh;
+    min-height: 400px;
+    display: flex;
+    flex-direction: row;
+    background-color: white ; 
+    border-radius: 10px;
+}
+
+.form-container-admin{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.form-title-admin{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 140px;
+}
+
+.form-title-admin h1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.close-btn-admin{
+    height: 40px;
+}
+.form-title-admin h1 span {
+    font-size: 36px;
+}
+
+.forget-password-div-admin{
+    height: 10px;
+}

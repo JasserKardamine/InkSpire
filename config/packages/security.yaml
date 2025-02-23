@@ -12,13 +12,17 @@ security:
         main:
             lazy: true
             provider: users_in_memory
+            
+            #form_login:
+            #   login_path: app_signin
+            #    check_path: app_signin
+            #    username_parameter: signin[email]  
+            #    password_parameter: signin[password]
             logout:
                 path: app_logout
-                target: app_signin
-                
-              
+                target: app_login
+            #entry_point: form_login  
 
-
-    access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+    # access_control:
+    #   - { path: ^/dashboard, roles: ROLE_ADMIN }
+    #    - { path: ^/home$, roles: ROLE_USER }  
