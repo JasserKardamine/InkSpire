@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>InkSpire | Admin Dashboard </title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logo.jpg">
+    <link rel="stylesheet" href="BackAssets/vendor/owl-carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="BackAssets/vendor/owl-carousel/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link href="BackAssets/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
+    <link href="BackAssets/css/style.css" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+   
+
+
+    <div id="main-wrapper">
+        <div class="nav-header custom">
+            <a href="{{ path('app_dashboard') }}" class="brand-logo">
+                <div class="inkspire-logo">
+                    <img  src="./images/logo.jpg" alt="">
+                </div>
+            </a>
+
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content">
+                <nav class="navbar navbar-expand">
+                    <div class="collapse navbar-collapse justify-content-between">
+                        <div class="header-left">
+                            <div class="search_bar dropdown">
+                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                                <div class="dropdown-menu p-0 m-0">
+                                    <form>
+                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="quixnav">
+            <div class="quixnav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li class="nav-label first">Main Menu</li>
+                    <li>
+                        <a href="{{ path('app_dashboard') }}"  aria-expanded="false"><i class="icon icon-single-04"></i><span class="nav-text">Dashboard</span></a>       
+                    </li>
+                    <li>
+                        <a href="{{ path('app_admin_auction_show') }}"  aria-expanded="false"><i class="fa-solid fa-dollar-sign"></i><span class="nav-text"> Auctions</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.firstName }}</td>
+                                    <td>{{ user.lastName }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.address }}</td>
+
+                                    {% if user.status == 0 %}
+                                        <td>Active</td>   
+                                    {% else %}
+                                        <td>Active</td>
+                                    {% endif %}
+                                    {% if user.role == 1 %}
+                                         <td>Adrmin</td>
+                                    {% else %}
+                                         <td>Artist</td>
+                                    {% endif %}
+                                   
+                                     <td><a class="ban-button" href="{{ path('app_ban', { 'id': user.id }) }}">Ban</a> &nbsp; <a class="Unban-button" href="{{ path('app_unban', { 'id': user.id }) }}">Unban</a></td>
+                                </tr>
+                             {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="BackAssets/vendor/global/global.min.js"></script>
+    <script src="BackAssets/js/quixnav-init.js"></script>
+    <script src="BackAssets/js/custom.min.js"></script>
+
+
+    <!-- Vectormap -->
+    <script src="BackAssets/vendor/raphael/raphael.min.js"></script>
+    <script src="BackAssets/vendor/morris/morris.min.js"></script>
+
+
+    <script src="BackAssets/vendor/circle-progress/circle-progress.min.js"></script>
+    <script src="BackAssets/vendor/chart.js/Chart.bundle.min.js"></script>
+
+    <script src="BackAssets/vendor/gaugeJS/dist/gauge.min.js"></script>
+
+    <!--  flot-chart js -->
+    <script src="BackAssets/vendor/flot/jquery.flot.js"></script>
+    <script src="BackAssets/vendor/flot/jquery.flot.resize.js"></script>
+
+    <!-- Owl Carousel -->
+    <script src="BackAssets/vendor/owl-carousel/js/owl.carousel.min.js"></script>
+
+    <!-- Counter Up -->
+    <script src="BackAssets/vendor/jqvmap/js/jquery.vmap.min.js"></script>
+    <script src="BackAssets/vendor/jqvmap/js/jquery.vmap.usa.js"></script>
+    <script src="BackAssets/vendor/jquery.counterup/jquery.counterup.min.js"></script>
+
+
+    <script src="BackAssets/js/dashboard/dashboard-1.js"></script>
+
+</body>
+
+</html>

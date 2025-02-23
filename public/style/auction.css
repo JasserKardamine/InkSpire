@@ -233,7 +233,6 @@
 .search-bar input::placeholder {
     color: #A1A1AA;
 }
-
 .select {
     display: flex;
     justify-content: flex-start;
@@ -259,7 +258,6 @@ select option {
     background-color: #18181B;
     color: white;
 }
-
 .price-filter {
     padding: 20px;
     background-color: #101014;

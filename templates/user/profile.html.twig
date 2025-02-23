@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block actionblock %}
-    {% if user.id is not null %}
+    {% if app.session.get('UserId') is not null %}
         <div class="home-profile-pic-div">
             <a href="#" ><span class="material-symbols-outlined">upload</span> </a>
             <a href="#" ><span class="material-symbols-outlined">shopping_cart</span></a>
             <a href="#" ><span class="material-symbols-outlined">report</span> </a>            
-            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
+            <a href="{{ path('app_profile') }}" class="home-profile-picture"> <img src="{{ asset(user.picture ? 'uploads/ProfilePictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </a>
            
         </div>    
     {% else %}
@@ -16,6 +16,7 @@
         </div>
     {% endif %}
 {% endblock %}
+
 
 
 {% block tochange %}
@@ -101,17 +102,22 @@
 
         <div class="Profile-container">
             <div class="Profile">
-                <div class="Profile-image"> <img src="{{ asset(user.picture ? 'uploads/pictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </div>
-
+                <div class="Profile-image"> <img src="{{ asset(user.picture ? 'uploads/ProfilePictures/' ~ user.picture : './images/default_avatar.jpg') }}" alt="Profile Picture"> </div>
                 <div class="Profile-name">
+                    <a href="{{ path('app_edit') }}" class="upload-button" ><span class="material-symbols-outlined">upgrade</span>Upload avatar</a>
                     <h1>{{ user.firstName ~ '   ' ~ user.lastName }}</h1>
                     <p>innovative artist</p>
                 </div>
-
+                {% if user.address is not empty %}
+                     <div class="location-profile"><p><span class="material-symbols-outlined">location_on</span>{{user.address}}</p></div>
+                {% endif %}
                 <div class="Profile-action">
-                    <a class="Profile-action-edit" href="{{path('app_edit')}}">Edit Profile</a>
-                    <a class="Profile-action-logout" href="{{ path('app_logout') }}">Log out </a>
+                    <a class="Profile-action-edit" href="{{path('app_edit')}}"><span class="material-symbols-outlined">edit</span>Edit Profile</a>
                 </div>
+                 {% if user.bio is not empty %}
+                     <div class="profile-bio"><p>{{ user.bio}}</p></div>
+                {% endif %}
+                <div class="profile-contact"><h3>Contact via </h3><p>{{ user.email }}<p></div>
             </div>
         </div>
     </div>

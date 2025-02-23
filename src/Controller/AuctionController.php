@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Entity\Artwork;
 use App\Entity\Auction;
 use App\Form\AuctionType;
 use App\Repository\UserRepository;

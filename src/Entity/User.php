@@ -110,6 +110,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Artwork::class, mappedBy: 'user')]
     private Collection $artworks;
 
+    #[ORM\Column]
+    private ?int $status = null;
+
     public function __construct()
     {
         $this->bids = new ArrayCollection();
@@ -255,7 +258,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER']; // Example role
+        $roles = ['ROLE_USER']; 
+    
+        if ($this->role === 1) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+    
+        return $roles;
     }
 
     public function getUserIdentifier(): string
@@ -300,4 +309,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
 }

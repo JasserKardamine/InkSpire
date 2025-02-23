@@ -1,0 +1,37 @@
+{% extends 'user/signin.html.twig' %}
+
+{% block tochange %}
+    <div class="login-container">
+        <div class="login-card-admin">
+            <div class="form-container-admin">
+                <div class="close-btn-admin">
+                   
+                </div>
+
+                <div class="form-title-admin">
+                    <h1>Admin <span class="material-symbols-outlined"> shield_person </span></h1>
+                </div>
+                {{ form_start(form, {'attr': {'class': 'action-form','novalidate': 'novalidate'}}) }}
+                
+                      <div class="action-form-row">
+                            {{ form_label(form.email) }}
+                            {{ form_widget(form.email) }} 
+                            {{ form_errors(form.email) }}
+                        </div>
+
+                        <div class="action-form-row">
+                            {{ form_label(form.password) }}
+                            {{ form_widget(form.password) }}
+                            {{ form_errors(form.password) }}
+                        </div>
+                        <div class="forget-password-div">
+                           
+                        </div>
+                       {{ form_row(form.Signin) }}
+
+                {{ form_end(form) }}
+
+            </div>
+            
+        </div>
+ {% endblock %}
