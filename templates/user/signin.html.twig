@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="45887527665-nsn0v3m6icm0pkr222pe2kk469sneanu.apps.googleusercontent.com">
     <link rel="stylesheet" href="{{ asset('style/user.css') }}">
     <link rel="icon" type="image/png" href="images/logo.jpg">
     <title>Log In | InkSpire</title>
@@ -62,13 +63,14 @@
                     <div class="separator">
                         <span>OR</span>
                     </div>
-                    <button type="submit" class="api-btn"> Sign in with Google <img src="./images/google.png" alt =""> </button>
-                    <button type="submit" class="api-btn"> Sign in with GitHub <img src="./images/github.png" alt =""> </button>
+                    <div class="g-signin2 " data-onsuccess="onSignIn"></div>
                    
                 </div>
             </div>
         </div>    
         {% endblock %}     
     </div> 
+          <script src="{{ asset('script/googletest.js') }}"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
 </body>
 </html>

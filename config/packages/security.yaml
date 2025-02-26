@@ -3,7 +3,10 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
 
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
 
     firewalls:
         dev:
@@ -11,18 +14,19 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
-            
-            #form_login:
-            #   login_path: app_signin
-            #    check_path: app_signin
-            #    username_parameter: signin[email]  
-            #    password_parameter: signin[password]
+            provider: app_user_provider  
             logout:
                 path: app_logout
                 target: app_signin
-            #entry_point: form_login  
+        
 
-    # access_control:
-    #   - { path: ^/dashboard, roles: ROLE_ADMIN }
-    #    - { path: ^/home$, roles: ROLE_USER }  
+    access_control:
+        - { path: ^/user/logout$, roles: ROLE_USER }
+        - { path: ^/user/Profile$, roles: ROLE_USER }
+        - { path: ^/user/edit$, roles: ROLE_USER }
+        - { path: ^/user/canelacc$, roles: ROLE_USER }
+        - { path: ^/user/changepass$, roles: ROLE_USER }
+
+
+
+        - { path: ^/dashboard$, roles: ROLE_ADMIN }

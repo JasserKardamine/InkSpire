@@ -3,20 +3,24 @@
 namespace App\Controller;
 
 use App\Entity\User ;
-use App\Form\ChangepasswordType;
 use App\Form\EditType;
 use App\Form\SigninType;
 use App\Form\SignupType;
+use App\Form\ChangepasswordType;
+use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class UserController extends AbstractController
 {
@@ -62,15 +66,19 @@ final class UserController extends AbstractController
         }
     }
     
-    
      
      #[Route('/user/signin', name: 'app_signin')]
-     public function SignIn(Request $request, SessionInterface $session, UserPasswordHasherInterface $passwordHasher): Response
+     public function SignIn(
+        Request $request,
+        SessionInterface $session,
+        UserPasswordHasherInterface $passwordHasher,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher): Response
      {
          $form = $this->createForm(SigninType::class);
          $form->handleRequest($request);
-
-         
+        
+        
          if($session->has("UserId")) {
             $userid = $session->get("UserId", null ) ; 
             if ($this->entityManager->getRepository(User::class)->find($userid)->getRole() == 0) {
@@ -78,27 +86,29 @@ final class UserController extends AbstractController
             }
          }
         
-
+         //entering state 
          if (!$form->isSubmitted() || !$form->isValid()) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
+
      
          $email = $form->get('email')->getData();
          $password = trim($form->get('password')->getData());
          $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
      
-         if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
+         if (!$user || !$passwordHasher->isPasswordValid($user, $password) || $user->getStatus() != 1 ) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
-         if($user->getRole() === 1){
-            return $this->redirectToRoute('app_loginadmin');
-         }
-         if ( $user->getStatus() === 1) {
+      
              $session->set('UserId', $user->getId());
-             return $this->redirectToRoute('app_home');
-         }
 
-         return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
+             //setting up authentification (badelt l auth handler )
+             $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+             $tokenStorage->setToken($token);
+             $eventDispatcher->dispatch(new InteractiveLoginEvent($request, $token));
+             //end
+
+             return $this->redirectToRoute('app_home');
      }
      
 
@@ -111,14 +121,15 @@ final class UserController extends AbstractController
         $user = new User() ; 
         $SignupForm = $this->createForm(SignupType::class,$user) ; 
         $SignupForm->handleRequest($request) ; 
-
+        
+       
         if($session->has("UserId")) {
             $userid = $session->get("UserId", null ) ; 
             if ($this->entityManager->getRepository(User::class)->find($userid)->getRole() == 0) {
             return $this->redirectToRoute('app_home');
             }
          }
-
+        
         if($SignupForm->isSubmitted() && $SignupForm->isValid()) { 
             
             $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
@@ -195,26 +206,18 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/Profile' , name : 'app_profile')]
-    public function UserProfile(SessionInterface $session) : Response
+    public function UserProfile() : Response
     {   
-        if ($redirect = $this->redirectIfUser($session)) {
-            return $redirect;
-        }
-
-        $userid = $session->get('UserId');
+        
+        $user = $this->getUser();
     
-        if (!$userid || !($user = $this->entityManager->getRepository(User::class)->find($userid))) {
+        if (!$user) {
             return $this->redirectToRoute('app_signin');
         }
 
-        if($user) {
-            return $this->render('user/profile.html.twig',[
-               'user' => $user
-            ]);
-        
-        }else{
-            return $this->redirectToRoute('app_home');
-        }
+        return $this->render('user/profile.html.twig', [
+            'user' => $user
+        ]);
     }
 
 
@@ -268,20 +271,17 @@ final class UserController extends AbstractController
     #[Route('/user/canelacc' , name : 'app_cancelacc')]
     public function CacelAccount(SessionInterface $session) {
 
-        if ($redirect = $this->redirectIfUser($session)) {
-            return $redirect;
-        }
+        $user = $this->getUser();
 
-        $userid = $session->get("UserId",null) ; 
-        $user = $this->entityManager->getRepository(User::class)->find($userid); 
-
-        if($user != null){
+        if($user){
             $this->entityManager->remove($user) ; 
             $this->entityManager->flush() ; 
+            $this->container->get('security.token_storage')->setToken(null);
         }
         $session->clear() ; 
         return $this->redirectToRoute('app_home');
     }  
+
 
 
     #[Route('/user/changepass', name: "app_change_password")]
