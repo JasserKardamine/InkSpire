@@ -1,0 +1,57 @@
+{% extends 'admin/base.html.twig' %}
+
+
+
+{% block tochange %}
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.firstName }}</td>
+                                    <td>{{ user.lastName }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.address }}</td>
+
+                                    {% if user.status == 1 %}
+                                        <td>Active</td>   
+                                    {% else %}
+                                        <td>Not Active</td>
+                                    {% endif %}
+                                    
+                                    {% if user.role == 1 %}
+                                         <td>Adrmin</td>
+                                    {% else %}
+                                         <td>Artist</td>
+                                    {% endif %}
+                                   
+                                     <td><a class="ban-button" href="{{ path('app_ban', { 'id': user.id }) }}">Ban</a> &nbsp; <a class="Unban-button" href="{{ path('app_unban', { 'id': user.id }) }}">Unban</a></td>
+                                </tr>
+                             {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+  
+    {% endblock %}

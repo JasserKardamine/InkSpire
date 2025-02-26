@@ -8,7 +8,6 @@ use App\Form\EditType;
 use App\Form\SigninType;
 use App\Form\SignupType;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,35 +44,40 @@ final class UserController extends AbstractController
     }
 
 
-     public function sendEmail(MailerInterface $mailer, string $destination, string $content): bool 
-     {
-         try {
-             $email = (new Email())
-                 ->from('support@eInkSpire.com')
-                 ->to($destination)
-                 ->priority(Email::PRIORITY_HIGH)
-                 ->subject('Verify your account!')
-                 ->text($content);
-                 
+    public function sendEmail(MailerInterface $mailer, string $destination, string $content): string 
+    {
+        try {
+            $email = (new Email())
+                ->from('support@eInkSpire.com')
+                ->to($destination)
+                ->priority(Email::PRIORITY_HIGH)
+                ->subject('Verify your account!')
+                ->text($content);
+    
+            $mailer->send($email); 
+            return "Email sent successfully."; 
+    
+        } catch (\Exception $e) {
+            return "Email sending failed: " . $e->getMessage();
+        }
+    }
+    
+    
      
-             $mailer->send($email); 
-             return true; 
-     
-         } catch (\Exception $e) {
-             return false; 
-         }
-     }
-     
-
-     #[Route('/signin', name: 'app_signin')]
+     #[Route('/user/signin', name: 'app_signin')]
      public function SignIn(Request $request, SessionInterface $session, UserPasswordHasherInterface $passwordHasher): Response
      {
          $form = $this->createForm(SigninType::class);
          $form->handleRequest($request);
 
+         
          if($session->has("UserId")) {
+            $userid = $session->get("UserId", null ) ; 
+            if ($this->entityManager->getRepository(User::class)->find($userid)->getRole() == 0) {
             return $this->redirectToRoute('app_home');
+            }
          }
+        
 
          if (!$form->isSubmitted() || !$form->isValid()) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
@@ -86,7 +90,10 @@ final class UserController extends AbstractController
          if (!$user || !$passwordHasher->isPasswordValid($user, $password)) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
-         if ($user->getRole() === 0 && $user->getStatus() === 1) {
+         if($user->getRole() === 1){
+            return $this->redirectToRoute('app_loginadmin');
+         }
+         if ( $user->getStatus() === 1) {
              $session->set('UserId', $user->getId());
              return $this->redirectToRoute('app_home');
          }
@@ -97,8 +104,8 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/signup' , name: 'app_signup')]
-    public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher , SessionInterface $session,MailerInterface $mailer) {
+    #[Route('/user/signup' , name: 'app_signup')]
+    public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher , SessionInterface $session,MailerInterface $mailer ) {
 
         
         $user = new User() ; 
@@ -106,7 +113,10 @@ final class UserController extends AbstractController
         $SignupForm->handleRequest($request) ; 
 
         if($session->has("UserId")) {
+            $userid = $session->get("UserId", null ) ; 
+            if ($this->entityManager->getRepository(User::class)->find($userid)->getRole() == 0) {
             return $this->redirectToRoute('app_home');
+            }
          }
 
         if($SignupForm->isSubmitted() && $SignupForm->isValid()) { 
@@ -136,7 +146,7 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/verify', name: 'app_verify')]
+    #[Route('/user/verify', name: 'app_verify')]
     public function verifyCode(Request $request, SessionInterface $session): Response
     {
         $user = unserialize($session->get('temp_user')); 
@@ -175,7 +185,7 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/logout' , name : 'app_logout')]
+    #[Route('/user/logout' , name : 'app_logout')]
     public function UserLogout(SessionInterface $session): Response
     {   
         $session->invalidate(); 
@@ -184,7 +194,7 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/Profile' , name : 'app_profile')]
+    #[Route('/user/Profile' , name : 'app_profile')]
     public function UserProfile(SessionInterface $session) : Response
     {   
         if ($redirect = $this->redirectIfUser($session)) {
@@ -209,7 +219,7 @@ final class UserController extends AbstractController
 
 
 
-    #[Route('/edit', name: 'app_edit')]
+    #[Route('/user/edit', name: 'app_edit')]
     public function UserEdit(SessionInterface $session, Request $request): Response
     {
        
@@ -255,7 +265,7 @@ final class UserController extends AbstractController
     
 
 
-    #[Route('/canelacc' , name : 'app_cancelacc')]
+    #[Route('/user/canelacc' , name : 'app_cancelacc')]
     public function CacelAccount(SessionInterface $session) {
 
         if ($redirect = $this->redirectIfUser($session)) {
@@ -274,7 +284,7 @@ final class UserController extends AbstractController
     }  
 
 
-    #[Route('/changepass', name: "app_change_password")]
+    #[Route('/user/changepass', name: "app_change_password")]
     public function ChangePassword(SessionInterface $session, Request $request, UserPasswordHasherInterface $passwordHasher) {
 
         if ($redirect = $this->redirectIfUser($session)) {

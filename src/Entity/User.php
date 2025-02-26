@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Artwork;
+use App\Validator\Namevalid ;
+use App\Validator\Emailexist ;
 use Doctrine\ORM\Mapping as ORM;
+use App\Validator\Passwordvalid ;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\Validator\Emailexist ;
-use App\Validator\Passwordvalid ;
-use App\Validator\Namevalid ;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -112,6 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->bids = new ArrayCollection();
+        $this->artworks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -267,11 +269,37 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email; // Use email as the unique identifier
     }
 
+    /**
+     * @return Collection<int, Artwork>
+     */
+    public function getArtworks(): Collection
+    {
+        return $this->artworks;
+    }
+
+    public function addArtwork(Artwork $artwork): static
+    {
+        if (!$this->artworks->contains($artwork)) {
+            $this->artworks->add($artwork);
+            $artwork->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtwork(Artwork $artwork): void
+    {
+        if ($this->artworks->removeElement($artwork)) {
+            // set the owning side to null (unless already changed)
+            if ($artwork->getUser() === $this) {
+                $artwork->setUser(null);
+            }
+        }
+    }
     public function getRole(): ?int
     {
         return $this->role;
     }
-
     public function setRole(int $role): static
     {
         $this->role = $role;

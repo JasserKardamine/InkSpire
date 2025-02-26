@@ -26,23 +26,23 @@
                 <h1 class="container-title">My Collections</h1>
                 <div class="top-collections-container special-container">
                     <a href="">
-                        <img src = "./images/cover-1738268999.jpg" alt ="no image ">
+                        <img src = "{{asset('images/cover-1738268999.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/LZ_4squarebig1.jpg" alt ="no image ">
+                        <img src = "{{asset('images/LZ_4squarebig1.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/ds.jpg" alt ="no image ">
+                        <img src = "{{asset('images/ds.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/artoriusanato-finnstark-web-petit.jpg" alt ="no image ">
+                        <img src = "{{asset('images/artoriusanato-finnstark-web-petit.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/marcus-rovn-02.jpg" alt ="no image ">
+                        <img src = "{{asset('images/marcus-rovn-02.jpg')}}" alt ="no image ">
                     </a>
                 
                 <a href="">
-                        <img src = "./images/yongzhao-zhu-1-311.jpg" alt ="no image ">
+                        <img src = "{{asset('images/yongzhao-zhu-1-311.jpg')}}" alt ="no image ">
                     </a>
                 </div>
             </div>
@@ -51,49 +51,49 @@
                 <h1 class="container-title">Portfolio </h1>
                 <div class="top-artwork-container special-container">
                     <a href="">
-                        <img src = "./images/marcus-rovn-02.jpg" alt ="no image ">
+                        <img src = "{{asset('images/marcus-rovn-02.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/yongzhao-zhu-1-311.jpg" alt ="no image ">
+                        <img src = "{{asset('images/yongzhao-zhu-1-311.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/guts2.jpg" alt ="no image ">
+                        <img src = "{{asset('images/guts2.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/andd2077-363366.jpg" alt ="no image ">
+                        <img src = "{{asset('images/andd2077-363366.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/wow.jpg" alt ="no image ">
+                        <img src = "{{asset('images/wow.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/ggg.jpg" alt ="no image ">
+                        <img src = "{{asset('images/ggg.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/1.jpg" alt ="no image ">
+                        <img src = "{{asset('images/1.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/x-1.jpg" alt ="no image ">
+                        <img src = "{{asset('images/x-1.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/erik-vssdsdsdsdan-helvoirt-final-01.jpg" alt ="no image ">
+                        <img src = "{{asset('images/erik-vssdsdsdsdan-helvoirt-final-01.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/chengwei-pan-1sdsdsd.jpg" alt ="no image ">
+                        <img src = "{{asset('images/chengwei-pan-1sdsdsd.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/qsdqsdwwarfengwei-cui-maonv01-camera-1.jpg" alt ="no image ">
+                        <img src = "{{asset('images/qsdqsdwwarfengwei-cui-maonv01-camera-1.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/yelli-.jpg" alt ="no image ">
+                        <img src = "{{asset('images/yelli-.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images//vipaul-kwon-zeronis-vi.jpg" alt ="no image ">
+                        <img src = "{{asset('images//vipaul-kwon-zeronis-vi.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/ewesnake-skin-1.jpg" alt ="no image ">
+                        <img src = "{{asset('images/ewesnake-skin-1.jpg')}}" alt ="no image ">
                     </a>
                     <a href="">
-                        <img src = "./images/iiiandrey-gritsuk-render-31-edit2.jpg" alt ="no image ">
+                        <img src = "{{asset('images/iiiandrey-gritsuk-render-31-edit2.jpg')}}" alt ="no image ">
                     </a>
                     
                 </div>
@@ -115,7 +115,7 @@
                     <a class="Profile-action-edit" href="{{path('app_edit')}}"><span class="material-symbols-outlined">edit</span>Edit Profile</a>
                 </div>
                  {% if user.bio is not empty %}
-                     <div class="profile-bio"><p>{{ user.bio}}</p></div>
+                     <div class="profile-bio"><p>{{user.bio}}</p></div>
                 {% endif %}
                 <div class="profile-contact"><h3>Contact via </h3><p>{{ user.email }}<p></div>
             </div>

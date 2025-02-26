@@ -1,0 +1,45 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block tochange %}
+    <div class="content-body">
+        <!-- row -->
+        <div class="container-fluid">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Amount</th>
+                                <th>Bidder Full Name</th>
+                                <th>Bidder Email</th>
+                                <th>Atwork</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if bids is not empty %}
+                        {% for bid in bids %}
+                            <tr>
+                                <td>{{ bid.time|date('Y-m-d H:i:s') }}</td>
+                                <td>{{ bid.amount }}</td>
+                                <td>{{ bid.user.getLastName() }} {{ bid.user.getFirstName() }}</td>
+                                <td>{{ bid.user.getEmail() }}</td>
+                                <td>
+                                    <img src="{{ asset('uploads/pictures/' ~ bid.auction.artwork.picture) }}" alt="Artwork">
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>
+                                    {{ message }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

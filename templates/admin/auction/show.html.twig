@@ -1,0 +1,50 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block tochange %}
+    <div class="content-body">
+        <!-- row -->
+        <div class="container-fluid">
+        <h2>Auctions</h2>
+            <div class="card-body">
+                <button class="btn btn-primary" onclick="window.location.href='{{ path('app_admin_auction_add') }}'">Add Auction</button>
+                <div class="table-responsive">
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Label</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Start Price</th>
+                                <th>End Price</th>
+                                <th>Status</th>
+                                <th>Artwork</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for auction in auctions %}
+                            <tr>
+                                <td>{{ auction.label }}</td>
+                                <td>{{ auction.startDate|date('Y-m-d H:i:s') }}</td>
+                                <td>{{ auction.endDate|date('Y-m-d H:i:s') }}</td>
+                                <td>{{ auction.startPrice }}</td>
+                                <td>{{ auction.endPrice }}</td>
+                                <td>{{ auction.status }}</td>
+                                <td>
+                                    <img src="{{ asset('uploads/pictures/' ~ auction.artwork.getPicture()) }}" alt="Artwork">
+                                </td>
+                                <td>
+                                    <a href="{{ path('app_admin_auction_edit', {'id': auction.id}) }}" class="btn btn-primary">Edit</a>
+                                    <a href="{{ path('app_admin_auction_delete', {'id': auction.id}) }}" class="btn btn-danger">Delete</a>
+                                    <a href="{{ path('app_admin_auction_show_bid', {'id': auction.id}) }}" class="btn btn-info">Bids</a>
+                                </tr>
+                             {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+{% endblock %}

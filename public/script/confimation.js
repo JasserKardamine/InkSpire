@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function() {
     const inputs = document.querySelectorAll(".confirm-input");
 

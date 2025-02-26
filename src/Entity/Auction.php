@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\AuctionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AuctionRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AuctionRepository::class)]
 class Auction
@@ -17,15 +19,28 @@ class Auction
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Label cannot be empty.')]
+
     private ?string $label = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: 'Start date is required.')]
+    #[Assert\Type(type: '\DateTimeInterface', message: 'Invalid date format.')]
+    #[Assert\GreaterThan("today", message: "The start date must be after today's date.")]
     private ?\DateTimeInterface $startDate = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Assert\NotBlank(message: 'End date is required.')]
+    #[Assert\Type(type: '\DateTimeInterface', message: 'Invalid date format.')]
+    #[Assert\GreaterThan(
+        propertyPath: 'startDate',
+        message: 'End date must be after the start date.'
+    )]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Starting price is required.')]
+    #[Assert\Positive(message: 'Starting price must be a positive number.')]
     private ?float $startPrice = null;
 
     #[ORM\Column]
@@ -33,12 +48,16 @@ class Auction
 
     #[ORM\Column(length: 10)]
     private ?string $status = null;
-
     /**
      * @var Collection<int, Bid>
      */
     #[ORM\OneToMany(targetEntity: Bid::class, mappedBy: 'auction', orphanRemoval: true)]
     private Collection $bids;
+
+    #[ORM\OneToOne(cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: 'Artwork is required.')]
+    private ?Artwork $artwork = null;
 
     public function __construct()
     {
@@ -55,7 +74,7 @@ class Auction
         return $this->label;
     }
 
-    public function setLabel(string $label): static
+    public function setLabel(?string $label): static
     {
         $this->label = $label;
 
@@ -67,7 +86,7 @@ class Auction
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): static
+    public function setStartDate(?\DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
 
@@ -79,7 +98,7 @@ class Auction
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): static
+    public function setEndDate(?\DateTimeInterface $endDate): static
     {
         $this->endDate = $endDate;
 
@@ -91,7 +110,7 @@ class Auction
         return $this->startPrice;
     }
 
-    public function setStartPrice(float $startPrice): static
+    public function setStartPrice(?float $startPrice): static
     {
         $this->startPrice = $startPrice;
 
@@ -103,7 +122,7 @@ class Auction
         return $this->endPrice;
     }
 
-    public function setEndPrice(float $endPrice): static
+    public function setEndPrice(?float $endPrice): static
     {
         $this->endPrice = $endPrice;
 
@@ -115,7 +134,7 @@ class Auction
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(?string $status): static
     {
         $this->status = $status;
 
@@ -143,11 +162,22 @@ class Auction
     public function removeBid(Bid $bid): static
     {
         if ($this->bids->removeElement($bid)) {
-            // set the owning side to null (unless already changed)
             if ($bid->getAuction() === $this) {
                 $bid->setAuction(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getArtwork(): ?Artwork
+    {
+        return $this->artwork;
+    }
+
+    public function setArtwork(Artwork $artwork): static
+    {
+        $this->artwork = $artwork;
 
         return $this;
     }
