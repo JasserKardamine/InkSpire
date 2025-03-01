@@ -1,0 +1,26 @@
+{% extends 'user/signup.html.twig' %}
+
+{% block formtochange %}
+    {{ form_start(form, {'attr': {'class': 'action-form','novalidate': 'novalidate'}}) }}
+        <div class="action-form-row">
+            {{ form_label(form.password) }}
+            {{ form_widget(form.password) }}
+            <div class="action-form-erro">
+                {{ form_errors(form.password) }}
+            </div>
+        </div>
+
+        <div class="action-form-row">
+            {{ form_label(form.confirmpassword) }}
+            {{ form_widget(form.confirmpassword) }}
+            <div class="action-form-erro">
+                {{ form_errors(form.confirmpassword) }}
+            </div>
+        </div>
+
+        {{ form_row(form.signup, {'attr': {'class': 'action-button'} } ) }}
+
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block googlestuff %}{% endblock %}

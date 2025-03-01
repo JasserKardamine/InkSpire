@@ -20,9 +20,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+
+
     private ?int $id = null;
 
     #[ORM\Column(length: 50 )]
@@ -44,6 +47,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank(message: "* Email is required.")]
     #[Assert\Email(message: "* Invalid email format.")]
     #[Assert\Length(max: 50, maxMessage: "* Email cannot exceed 50 characters.")]
+    #[Assert\NotBlank(groups: ['reset_request'], message: "Email is required!")]
+    #[Assert\Email(groups: ['reset_request'], message: "Invalid email format!")]
     #[ORM\Column(length: 50)]
     private ?string $email = null;
 
@@ -109,6 +114,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?int $status = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $phoneNumber = null;
 
     public function __construct()
     {
@@ -319,4 +327,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPhoneNumber(): ?int
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(int $phoneNumber): static
+    {
+        $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    public function getUser():User
+    {
+        return $this ; 
+    }
 }

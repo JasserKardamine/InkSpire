@@ -1,0 +1,36 @@
+{% extends 'user/verify.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block tochange %}
+<input type="hidden" name="form_identifier" value="verification_form">
+        <div class="login-container  ">
+            <div class="login-card verification">
+                <div class="image-container-verification request-image-container">
+                    <div class="image-title">
+                        <h1>JOIN THE LARGEST ART COMMUNITY IN THE WORLD</h1>
+                    </div>
+                    <div class="image-paragraph">
+                        <p>Get free access to 650 million pieces of art. Showcase, promote, sell, and share your work with over 100 million members.</p>
+                    </div>
+                </div>
+
+                <div class="form-container-verification">
+                    <div class="close-btn ">
+                        <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                    </div>
+                    <div class="form-title">
+                        <h1>Reset Password</h1>
+                    </div>
+
+                     <div class="verification-manual">
+                        <div class="manual"><p> If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
+                        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}. </p></div>
+                        <div class="verification-email"><p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p></div>
+                    </div>
+
+                    
+                   </div>
+            </div>
+        </div>  
+{% endblock %}

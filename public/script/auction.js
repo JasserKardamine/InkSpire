@@ -58,3 +58,5 @@ function confirmDelete(auctionId) {
     }
 }
 document.addEventListener("DOMContentLoaded", updateCountdown);
+
+

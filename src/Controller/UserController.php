@@ -6,13 +6,19 @@ use App\Entity\User ;
 use App\Form\EditType;
 use App\Form\SigninType;
 use App\Form\SignupType;
+use App\Form\GooglesignupType;
+use App\Form\ResetrequestType;
+use App\Form\ResetpasswordType;
 use App\Form\ChangepasswordType;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -25,11 +31,27 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 final class UserController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private UserPasswordHasherInterface $passwordHasher;
+    private TokenStorageInterface $tokenStorage;
+    private EventDispatcherInterface $eventDispatcher;
+    private HttpClientInterface $httpClient;
 
-    public function __construct(EntityManagerInterface $entityManager)
+
+    public function __construct(
+    EntityManagerInterface $entityManager,
+    UserPasswordHasherInterface $passwordHasher,
+    TokenStorageInterface $tokenStorage,
+    EventDispatcherInterface $eventDispatcher,
+    HttpClientInterface $httpClient
+    )
      {
-         $this->entityManager = $entityManager;
+        $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
+        $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->httpClient = $httpClient;
      }
+
 
     // access function (tab3a admin ) 
     private function redirectIfUser(SessionInterface $session): ?Response
@@ -65,19 +87,80 @@ final class UserController extends AbstractController
             return "Email sending failed: " . $e->getMessage();
         }
     }
+
+    private function authenticate(
+        $user,
+        SessionInterface $session,
+        Request $request) {
+
+         //setting up authentification (badelt l auth handler )
+         $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
+         $this->tokenStorage->setToken($token);
+         $this->eventDispatcher->dispatch(new InteractiveLoginEvent($request, $token));
+         $session->set('UserId', $user->getId());
+
+    }
     
+    private function GoogleSignIn($userData,$session,$request) : Response {
+        $email = $userData['email'];
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        if($user) {
+           $this->authenticate($user,$session,$request) ; 
+           return $this->redirectToRoute('app_home');
+        }
+       return $this->redirectToRoute('app_signup');
+    } 
+
+
+
+    #[Route('/user/google/signup' , name : 'google_signup_app')]
+    public function GoogleSignUp( Request $request , SessionInterface $session) : Response{
+
+        $userData = $session->get("google_user_data",null) ; 
+
+        $user = new User();
+        $user->setEmail($userData['email']);
+        $user->setfirstName($userData['given_name'] ?? '');
+        $user->setlastName($userData['family_name'] ?? '');
+        $user->setRole(0) ; 
+        $user->setStatus(1) ; 
+        $user->setTokens(10) ;
+
+        if($this->entityManager->getRepository(User::class)->findOneBy(['email' => $userData['email']])){
+            return $this->redirectToRoute('app_signin');
+        }
+
+        $form = $this->createForm(GooglesignupType::class) ; 
+        $form->handleRequest($request) ; 
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $formData = $form->getData();
+
+            $password = $formData['password'] ; 
+            $confirmpassword =  $formData['confirmpassword'];
+
+            if($password === $confirmpassword) {
+                $hashedPassword = $this->passwordHasher->hashPassword($user,$password);
+                $user->setPassword($hashedPassword);
+
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+                return $this->redirectToRoute('app_signin');
+            }  
+        }
+        return $this->render('user/googlesignup.html.twig',[
+            'form'=>$form->createView() , 
+        ]);
+    }
+
+
      
      #[Route('/user/signin', name: 'app_signin')]
-     public function SignIn(
-        Request $request,
-        SessionInterface $session,
-        UserPasswordHasherInterface $passwordHasher,
-        TokenStorageInterface $tokenStorage,
-        EventDispatcherInterface $eventDispatcher): Response
-     {
+     public function SignIn(Request $request , SessionInterface $session): Response
+     { 
          $form = $this->createForm(SigninType::class);
          $form->handleRequest($request);
-        
         
          if($session->has("UserId")) {
             $userid = $session->get("UserId", null ) ; 
@@ -96,28 +179,24 @@ final class UserController extends AbstractController
          $password = trim($form->get('password')->getData());
          $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
      
-         if (!$user || !$passwordHasher->isPasswordValid($user, $password) || $user->getStatus() != 1 ) {
+         if (!$user || !$this->passwordHasher->isPasswordValid($user, $password) || $user->getStatus() != 1 ) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
       
-             $session->set('UserId', $user->getId());
-
-             //setting up authentification (badelt l auth handler )
-             $token = new UsernamePasswordToken($user, 'main', $user->getRoles());
-             $tokenStorage->setToken($token);
-             $eventDispatcher->dispatch(new InteractiveLoginEvent($request, $token));
-             //end
-
-             return $this->redirectToRoute('app_home');
+         $this->authenticate($user,$session,$request) ; 
+            
+        return $this->redirectToRoute('app_home');
      }
      
 
 
 
     #[Route('/user/signup' , name: 'app_signup')]
-    public function UserSignup(Request $request , UserPasswordHasherInterface $passwordHasher , SessionInterface $session,MailerInterface $mailer ) {
+    public function UserSignup(
+        Request $request,
+        SessionInterface $session,
+        MailerInterface $mailer ) {
 
-        
         $user = new User() ; 
         $SignupForm = $this->createForm(SignupType::class,$user) ; 
         $SignupForm->handleRequest($request) ; 
@@ -132,7 +211,7 @@ final class UserController extends AbstractController
         
         if($SignupForm->isSubmitted() && $SignupForm->isValid()) { 
             
-            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
             $user->setTokens(10);
             $user->setRole(0) ; 
@@ -141,6 +220,7 @@ final class UserController extends AbstractController
             $verificationCode = rand(100000, 999999); 
             $session->set('verification_code', $verificationCode);
             $session->set('temp_user', serialize($user));
+            $session->set('verification_action','signup') ; 
           
 
             if ( $this->sendEmail($mailer,$user->getEmail(),$verificationCode) ) {
@@ -155,44 +235,67 @@ final class UserController extends AbstractController
         ]);
     }
 
-
+/* Verification : */
 
     #[Route('/user/verify', name: 'app_verify')]
     public function verifyCode(Request $request, SessionInterface $session): Response
     {
-        $user = unserialize($session->get('temp_user')); 
+        $user = unserialize($session->get('temp_user'));
         $correctCode = $session->get('verification_code');
+        $action = $session->get('verification_action'); 
+
         
         if (!$user || !$correctCode) {
-            return $this->redirectToRoute('app_signup'); 
+            return $this->redirectToRoute('app_signup');
         }
 
-        if ($request->isMethod('POST')) {
-            $piece1 = $request->request->get('1');
-            $piece2 = $request->request->get('2');
-            $piece3 = $request->request->get('3');
-            $piece4 = $request->request->get('4');
-            $piece5 = $request->request->get('5');
-            $piece6 = $request->request->get('6');
+        if ($request->isMethod('POST')  && $request->request->get('form_identifier') === 'verification_form') {
+            
+            $enteredCode = $this->getEnteredCode($request);
 
-            $enteredCode = $piece1 . $piece2 . $piece3 . $piece4 . $piece5 . $piece6 ; 
-
-            if ($enteredCode == $correctCode) {
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
-
-                // Clear session data
-                $session->remove('verification_code');
-                $session->remove('temp_user');
-
-                return $this->redirectToRoute('app_signin'); 
-            } 
+            if ($enteredCode != $correctCode) { 
+                return $this->render('user/verify.html.twig', ['user' => $user]);
+            }
+           
+            if ($action === "signup") {
+                return $this->processSignup($session, $user);
+            }
+            
+            return $this->redirectToRoute('app_reset_password'); 
         }
 
-        return $this->render('user/verify.html.twig',[
-            'user' => $user
-        ]);
+        return $this->render('user/verify.html.twig', ['user' => $user]);
     }
+
+   
+    private function getEnteredCode(Request $request): string
+    {
+        $code = '';
+        for ($i = 1; $i <= 6; $i++) {
+            $code .= $request->request->get((string)$i, '');
+        }
+        return $code;
+    }
+
+   
+    private function processSignup(SessionInterface $session, $user): Response
+    {
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->clearSession($session);
+        return $this->redirectToRoute('app_signin');
+    }
+
+
+    private function clearSession(SessionInterface $session): void
+    {
+        $session->remove('verification_code');
+        $session->remove('temp_user');
+        $session->remove('verification_action');
+    }
+
+/* l 9bal lkoll tab3in l verification */ 
 
 
 
@@ -208,7 +311,7 @@ final class UserController extends AbstractController
     #[Route('/user/Profile' , name : 'app_profile')]
     public function UserProfile() : Response
     {   
-        
+
         $user = $this->getUser();
     
         if (!$user) {
@@ -285,7 +388,7 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/changepass', name: "app_change_password")]
-    public function ChangePassword(SessionInterface $session, Request $request, UserPasswordHasherInterface $passwordHasher) {
+    public function ChangePassword(SessionInterface $session, Request $request) {
 
         if ($redirect = $this->redirectIfUser($session)) {
             return $redirect;
@@ -308,9 +411,9 @@ final class UserController extends AbstractController
             $newpassword = $formData['newpassword'];
             $confirmation = $formData['confirmpassword'];
     
-            if ($passwordHasher->isPasswordValid($user, $currentpassword)) {
+            if ($this->passwordHasher->isPasswordValid($user, $currentpassword)) {
                 if ($newpassword === $confirmation) {
-                    $hashedPassword = $passwordHasher->hashPassword($user, $newpassword);
+                    $hashedPassword = $this->passwordHasher->hashPassword($user, $newpassword);
                     $user->setPassword($hashedPassword);
     
                     $this->entityManager->flush();
@@ -327,4 +430,87 @@ final class UserController extends AbstractController
     }
     
 
+
+
+    #[Route('user/signin/google', name: 'google_signin')]
+    public function googleLogin(SessionInterface $session, Request $request ): RedirectResponse
+    {
+        if($session->has("UserId")) {
+            return $this->redirectToRoute('app_home');
+        }
+
+
+        $clientId = $_ENV['GOOGLE_CLIENT_ID'];
+        $redirectUri = $_ENV['GOOGLE_REDIRECT_URI'];
+        $scope = urlencode("email profile");
+    
+        $url = "https://accounts.google.com/o/oauth2/auth?response_type=code&client_id={$clientId}&redirect_uri={$redirectUri}&scope={$scope}&prompt=select_account";
+    
+       
+
+        // sending the action to the handler : 
+        $action = $request->query->get('action', 'signin');
+        $session->set("action" , $action) ; 
+        
+        return new RedirectResponse($url);
+    }
+
+    
+    #[Route('/user/signin/google/callback', name: 'google_callback')]
+    public function googleCallback(Request $request , SessionInterface $session): Response
+    {
+        if ($session->has('UserId')) {
+            return $this->redirectToRoute('app_home');
+        }
+        
+        $code = $request->query->get('code');
+
+        if (!$code) {
+            return new Response('Authorization code not found.', Response::HTTP_BAD_REQUEST);
+        }
+
+        // Exchange code for access token
+        $httpClient = HttpClient::create();
+        $response = $httpClient->request('POST', 'https://oauth2.googleapis.com/token', [
+            'body' => [
+                'client_id' => $_ENV['GOOGLE_CLIENT_ID'],
+                'client_secret' => $_ENV['GOOGLE_CLIENT_SECRET'],
+                'redirect_uri' => $_ENV['GOOGLE_REDIRECT_URI'],
+                'grant_type' => 'authorization_code',
+                'code' => $code,
+            ]
+        ]);
+
+        $data = $response->toArray();
+
+        if (!isset($data['access_token'])) {
+            return new Response('Access token not found.', Response::HTTP_BAD_REQUEST);
+        }
+
+        // Fetch user data from Google
+        $userResponse = $httpClient->request('GET', 'https://www.googleapis.com/oauth2/v1/userinfo', [
+            'headers' => ['Authorization' => 'Bearer ' . $data['access_token']],
+        ]);
+
+        $userData = $userResponse->toArray();
+        
+        //retriving the action : 
+        $action = $session->get("action",null) ;  
+        $session->remove("action") ; 
+        
+        if ($action == "signin") {
+        
+        return $this->GoogleSignIn($userData,$session,$request) ; 
+        }
+        else{
+            $session->set('google_user_data', $userData);
+            return $this->redirectToRoute('google_signup_app');
+        }
+    
+        
+    }
+    
+
+
 }
+

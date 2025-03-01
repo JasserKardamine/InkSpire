@@ -1,0 +1,41 @@
+{% extends 'user/signin.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block tochange %}
+ <div class="request-login-container">
+                <div class="request-login-card">
+                   
+                <div class="request-form-container">
+                    <div class="close-btn ">
+                        <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                    </div>
+                
+                    <div class="form-title">
+                        <h1>Reset you password <span class="material-symbols-outlined">lock_open</span></h1>
+                    </div> 
+
+                    {{ form_start(resetForm, {'attr': {'class': 'action-form','novalidate': 'novalidate' }}) }}
+                        <div class="action-form-row">
+                            {{ form_label(resetForm.plainPassword.first) }}
+                            {{ form_widget(resetForm.plainPassword.first) }}
+                            <div class="action-form-erro">
+                                {{ form_errors(resetForm.plainPassword.first) }}
+                            </div>
+                        </div>
+
+                        <div class="action-form-row">
+                            {{ form_label(resetForm.plainPassword.second) }}
+                            {{ form_widget(resetForm.plainPassword.second) }}
+                             <div class="action-form-erro">
+                                {{ form_errors(resetForm.plainPassword.second) }}
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary action-button">Reset password</button>
+                    {{ form_end(resetForm) }}
+
+                </div>
+            </div>
+        </div>    
+{% endblock %}

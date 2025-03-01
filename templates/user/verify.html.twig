@@ -3,6 +3,7 @@
 
 {% block tochange %}
     <form action="{{path('app_verify')}}" method ="POST">
+        <input type="hidden" name="form_identifier" value="verification_form">
         <div class="login-container  ">
             <div class="login-card verification">
                 <div class="image-container-verification verify-image-container">
@@ -25,7 +26,7 @@
                         <div class="verification-email"><p>We've sent you an email to</p><p class="email">{{user.email}}</p></div>
                         <div class="manual"><p>Write down the code you recieved the participate in the worlds largest art community. Submit artwork, Intteract in the comments and more </p></div>
                     </div>
-                    
+                   
                     <div class="otp-verification-input">
                         <input name="1" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>
                         <input name="2" class="confirm-input" type="text" maxlength="1" oninput="this.value = this.value.replace(/[^0-9]/, '')"/>

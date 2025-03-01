@@ -26,6 +26,15 @@
             "./migrations/.gitignore"
         ]
     },
+    "phpstan/phpstan": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "5e490cc197fb6bb1ae22e5abbc531ddc633b6767"
+        }
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {
@@ -38,6 +47,19 @@
             "./.env.test",
             "./phpunit.xml.dist",
             "./tests/bootstrap.php"
+        ]
+    },
+    "scheb/2fa-bundle": {
+        "version": "7.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.0",
+            "ref": "1e6f68089146853a790b5da9946fc5974f6fcd49"
+        },
+        "files": [
+            "./config/packages/scheb_2fa.yaml",
+            "./config/routes/scheb_2fa.yaml"
         ]
     },
     "symfony/asset-mapper": {
@@ -281,6 +303,18 @@
         "files": [
             "./config/packages/web_profiler.yaml",
             "./config/routes/web_profiler.yaml"
+        ]
+    },
+    "symfonycasts/reset-password-bundle": {
+        "version": "1.23",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "97c1627c0384534997ae1047b93be517ca16de43"
+        },
+        "files": [
+            "./config/packages/reset_password.yaml"
         ]
     },
     "twig/extra-bundle": {

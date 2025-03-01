@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-
+use Symfony\Component\Validator\Constraints as Assert;
 
 class SigninType extends AbstractType
 {
@@ -23,6 +23,12 @@ class SigninType extends AbstractType
         ->add('password', PasswordType::class, [
             'label' => 'Password',
             'attr' => ['placeholder' => 'Enter your password'],
+            'constraints' => [
+                new Assert\NotBlank([
+                    'message' => 'Please enter a password.',
+                    'groups' => ['login'] 
+                ]),
+            ],
         ])
         ->add('Signin', SubmitType::class, [
             'label' => 'Sign In'

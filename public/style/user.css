@@ -129,6 +129,11 @@
     gap: 15px;
 }
 
+.action-form-erro{
+width: 100%;
+height: 10px;
+}
+
 .action-form  input {
     padding: 11px 10px 11px 10px ;
     outline: none;
@@ -142,7 +147,7 @@
     font-weight: 600;
 }
 
-.action-form button{
+.action-button{
     padding: 12px 10px 12px 10px ;  
     border: 0;
     background-color: #0071F9 ; 
@@ -237,15 +242,25 @@
     background-color: #F8FAFF; 
     border: 1px solid #C9CACF; 
     border-radius: 4px;
-    width: 80%;
+    text-decoration: none;
+    width: 75%;
     cursor: pointer;
     font-size: 13px;
+    color: rgb(82, 82, 82);
     display: flex;
     margin-bottom: 10px;
     align-items: center;
     justify-content: center;
     font-weight: 500;
+    transition: border 0.2s ease-in ,  color 0.2s ease-in-out;
 }
+
+
+.api-btn:hover {
+   border: 1px solid #0071F9;
+   color: #0071F9;
+}
+
 
 .api-btn img {
     position: absolute;
@@ -890,4 +905,60 @@
 
 .forget-password-div-admin{
     height: 10px;
+}
+
+
+/* reCAPTCHA styling */
+
+#recaptcha-error{
+    height: 10px;
+    color: red;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+/*request styling */
+
+.request-login-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+}
+
+.request-login-card{
+    width: 30%;
+    height: 40vh;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    background-color: white ; 
+}
+.request-image-container{
+    background-image: url(/images/blue.jpg);
+}
+
+.request-form-container{
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+.request-form-container .form-title h1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+}
+.request-form-container .form-title span {
+    font-weight: 700;
+    font-size: 30px;
+}
+
+.request-form{
+    margin-top: 50px;
 }

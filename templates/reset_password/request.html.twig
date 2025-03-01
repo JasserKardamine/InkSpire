@@ -1,0 +1,45 @@
+{% extends 'user/verify.html.twig' %}
+
+{% block title %}Reset your password{% endblock %}
+
+{% block tochange %}
+  <input type="hidden" name="form_identifier" value="verification_form">
+        <div class="login-container  ">
+            <div class="login-card verification">
+                <div class="image-container-verification request-image-container">
+                    <div class="image-title">
+                        <h1>JOIN THE LARGEST ART COMMUNITY IN THE WORLD</h1>
+                    </div>
+                    <div class="image-paragraph">
+                        <p>Get free access to 650 million pieces of art. Showcase, promote, sell, and share your work with over 100 million members.</p>
+                    </div>
+                </div>
+
+                <div class="form-container-verification">
+                    <div class="close-btn ">
+                        <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                    </div>
+                    <div class="form-title">
+                        <h1>Reset Password</h1>
+                    </div>
+                    <div class="verification-manual">
+                        <div class="verification-email"><p>In order to reset your password : </p><p class="email"></p></div>
+                        <div class="manual"><p>you need to write down your email adress so that we can Verify it is you .  </p></div>
+                    </div>
+
+                    {% for flash_error in app.flashes('reset_password_error') %}
+                        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                    {% endfor %}
+                  
+                    {{ form_start(requestForm, {'attr': {'class': 'action-form request-form','novalidate': 'novalidate' }}) }}
+                        <div class="action-form-row">
+                            {{ form_label(requestForm.email) }}
+                            {{ form_widget(requestForm.email, {'attr': {'placeholder': 'Enter your email'}} ) }}
+                        </div>
+
+                        <button class="btn btn-primary action-button">Send</button>
+                    {{ form_end(requestForm) }}
+                </div>
+            </div>
+        </div>  
+{% endblock %}
