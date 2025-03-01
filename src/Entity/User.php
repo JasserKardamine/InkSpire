@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[UniqueEntity(fields: ['email'], message: 'This email is already in use.')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface 
 {
 
     #[ORM\Id]
@@ -69,39 +69,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     //#[Assert\Url(message: "* Picture must be a valid URL.")]
     private ?string $picture = null;
 
-    
-    // seperate form validation ( easy peasy )
-    public static function loadValidatorMetadata(ClassMetadata $metadata)
-    {
-        $metadata->addPropertyConstraint('email', new Assert\NotBlank([
-            'groups' => ['signin'],
-            'message' => 'Email is required!'
-        ]));
-
-        $metadata->addPropertyConstraint('email', new Emailexist('strict',['signin'], null));
-
-        $metadata->addPropertyConstraint('email', new Assert\Email([
-            'groups' => ['signin'],
-            'message' => 'Please enter a valid email address.'
-        ]));
-        
-        $metadata->addPropertyConstraint('password', new Assert\NotBlank([
-            'groups' => ['signin'],
-            'message' => 'Password is required!'
-        ]));
-        $metadata->addPropertyConstraint('password', new Assert\Length([
-            'min' => 6,
-            'minMessage' => 'Your password should be at least {{ limit }} characters.',
-            'max' => 50,
-            'maxMessage' => 'Your password should not be longer than {{ limit }} characters.',
-            'groups' => ['signin']
-        ]));
-
-        $metadata->addPropertyConstraint('password', new Passwordvalid('email', 'strict', ['signin'], null));
-
-    }
-    
-
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $googleAuthenticatorSecret = null;
 
     /**
      * @var Collection<int, Bid>
@@ -117,6 +86,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(nullable: true)]
     private ?int $phoneNumber = null;
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $secret = null;
+
 
     public function __construct()
     {
@@ -222,6 +195,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->picture = $picture;
 
+        return $this;
+    }
+
+    public function getGoogleAuthenticatorSecret(): ?string
+    {
+        return $this->googleAuthenticatorSecret;
+    }
+
+    public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): static
+    {
+        $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
         return $this;
     }
 
@@ -343,4 +327,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this ; 
     }
+
+
+
+
+    // seperate form validation ( easy peasy )
+    public static function loadValidatorMetadata(ClassMetadata $metadata)
+    {
+        $metadata->addPropertyConstraint('email', new Assert\NotBlank([
+            'groups' => ['signin'],
+            'message' => 'Email is required!'
+        ]));
+
+        $metadata->addPropertyConstraint('email', new Emailexist('strict',['signin'], null));
+
+        $metadata->addPropertyConstraint('email', new Assert\Email([
+            'groups' => ['signin'],
+            'message' => 'Please enter a valid email address.'
+        ]));
+        
+        $metadata->addPropertyConstraint('password', new Assert\NotBlank([
+            'groups' => ['signin'],
+            'message' => 'Password is required!'
+        ]));
+        $metadata->addPropertyConstraint('password', new Assert\Length([
+            'min' => 6,
+            'minMessage' => 'Your password should be at least {{ limit }} characters.',
+            'max' => 50,
+            'maxMessage' => 'Your password should not be longer than {{ limit }} characters.',
+            'groups' => ['signin']
+        ]));
+
+        $metadata->addPropertyConstraint('password', new Passwordvalid('email', 'strict', ['signin'], null));
+
+    }
+    
+       
+
 }

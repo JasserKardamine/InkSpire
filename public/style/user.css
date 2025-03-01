@@ -729,6 +729,12 @@ height: 10px;
     width: 79%;
 }
 
+.manual-qrcode{
+    width: 100%;
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
 .verification-email{
     display: flex;
     flex-direction: row;
@@ -961,4 +967,44 @@ height: 10px;
 
 .request-form{
     margin-top: 50px;
+}
+
+/*qr code */
+.qrcode-input{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 26%;
+}
+
+.qrcode-input input {
+    width: 100%;
+    padding: 8px 10px 8px 10px ;
+    outline: none;
+    font-size: 15px;
+    border: 1px solid #C9CACF ; 
+    background-color: #FAFAFA;
+    border-radius: 3px;
+}
+
+.qrcode-input button{
+    padding: 8px 10px 8px 10px ;  
+    border: 0;
+    background-color: #0071F9 ; 
+    color: white;
+    transition: background-color 0.2s ease-in;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    width: 100%;
+}
+.qr-form-div{
+    width: 100%;
+    display: flex ; 
+    align-items: center;
+    justify-content: center;
+    
 }

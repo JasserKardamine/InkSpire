@@ -1,0 +1,45 @@
+{% extends 'user/verify.html.twig' %}
+
+{% block tochange %}
+    <div class="login-container">
+        <div class="login-card verification">
+            <div class="image-container-verification verify-image-container">
+                <div class="image-title">
+                    <h1>JOIN THE LARGEST ART COMMUNITY IN THE WORLD</h1>
+                </div>
+                <div class="image-paragraph">
+                    <p>Get free access to 650 million pieces of art. Showcase, promote, sell, and share your work with over 100 million members.</p>
+                </div>
+            </div>
+
+            <div class="form-container-verification">
+                <div class="close-btn">
+                    <a href="{{ path('app_home') }}"><span class="material-symbols-outlined">close</span></a> 
+                </div>
+                <div class="form-title">
+                    <h1>Two-Factor Authentication</h1>
+                </div>
+                <div class="verification-manual">
+                    <div class="manual-qrcode">
+                        <p>Scan this QR code with your Google Authenticator app, then enter the code below.</p>
+                    </div>
+                </div>
+
+                <img src="{{ qrCodeUrl }}" alt="QR Code">
+
+                {% if error is defined %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <form class="qr-form-div" action="{{ path('app_2fa_verify') }}" method="POST">
+                    <div class="qrcode-input">
+                        <input type="text" name="otp" placeholder="Enter Code" required>
+                        <button type="submit">Verify</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

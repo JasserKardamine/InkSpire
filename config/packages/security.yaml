@@ -18,8 +18,7 @@ security:
             logout:
                 path: app_logout
                 target: app_signin
-        
-
+                
     access_control:
         - { path: ^/user/logout$, roles: ROLE_USER }
         - { path: ^/user/Profile$, roles: ROLE_USER }

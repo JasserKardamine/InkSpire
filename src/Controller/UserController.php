@@ -7,13 +7,14 @@ use App\Form\EditType;
 use App\Form\SigninType;
 use App\Form\SignupType;
 use App\Form\GooglesignupType;
-use App\Form\ResetrequestType;
-use App\Form\ResetpasswordType;
 use App\Form\ChangepasswordType;
+use AuthenticatorService;
 use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Request;
+use Sonata\GoogleAuthenticator\GoogleAuthenticator;
+use Sonata\GoogleAuthenticator\GoogleQrUrl;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -24,6 +25,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Google\GoogleAuthenticatorInterface;
+use Symfony\Bundle\MakerBundle\Security\Model\Authenticator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -35,23 +38,22 @@ final class UserController extends AbstractController
     private TokenStorageInterface $tokenStorage;
     private EventDispatcherInterface $eventDispatcher;
     private HttpClientInterface $httpClient;
-
+    private GoogleAuthenticator $googleAuthenticator;
 
     public function __construct(
-    EntityManagerInterface $entityManager,
-    UserPasswordHasherInterface $passwordHasher,
-    TokenStorageInterface $tokenStorage,
-    EventDispatcherInterface $eventDispatcher,
-    HttpClientInterface $httpClient
-    )
-     {
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher,
+        HttpClientInterface $httpClient
+    ) {
         $this->entityManager = $entityManager;
         $this->passwordHasher = $passwordHasher;
         $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->httpClient = $httpClient;
-     }
-
+        $this->googleAuthenticator = new GoogleAuthenticator();
+    }
 
     // access function (tab3a admin ) 
     private function redirectIfUser(SessionInterface $session): ?Response
@@ -157,7 +159,7 @@ final class UserController extends AbstractController
 
      
      #[Route('/user/signin', name: 'app_signin')]
-     public function SignIn(Request $request , SessionInterface $session): Response
+     public function SignIn(Request $request, SessionInterface $session): Response
      { 
          $form = $this->createForm(SigninType::class);
          $form->handleRequest($request);
@@ -169,23 +171,28 @@ final class UserController extends AbstractController
             }
          }
         
-         //entering state 
          if (!$form->isSubmitted() || !$form->isValid()) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
 
-     
+        
          $email = $form->get('email')->getData();
          $password = trim($form->get('password')->getData());
          $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-     
-         if (!$user || !$this->passwordHasher->isPasswordValid($user, $password) || $user->getStatus() != 1 ) {
+
+         if (!$user || !$this->passwordHasher->isPasswordValid($user, $password) || $user->getStatus() != 1) {
              return $this->render('user/signin.html.twig', ['form' => $form->createView()]);
          }
-      
-         $this->authenticate($user,$session,$request) ; 
-            
-        return $this->redirectToRoute('app_home');
+
+         // Store user in session temporarily
+         $session->set('temp_user_id', $user->getId());
+
+         // Redirect to 2FA setup if not configured, otherwise to verification
+         if (!$user->getGoogleAuthenticatorSecret()) {
+            return $this->redirectToRoute('app_2fa_setup');
+         }
+        
+         return $this->redirectToRoute('app_2fa_verify');
      }
      
 
@@ -506,11 +513,92 @@ final class UserController extends AbstractController
             $session->set('google_user_data', $userData);
             return $this->redirectToRoute('google_signup_app');
         }
-    
-        
     }
-    
 
+    #[Route('/2fa/setup', name: 'app_2fa_setup')]
+    public function setup2FA(SessionInterface $session): Response
+    {
+        $userId = $session->get('temp_user_id');
+        if (!$userId) {
+            return $this->redirectToRoute('app_signin');
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            return $this->redirectToRoute('app_signin');
+        }
+
+        // Generate new secret if not exists
+        if (!$user->getGoogleAuthenticatorSecret()) {
+            $secret = $this->googleAuthenticator->generateSecret();
+            $user->setGoogleAuthenticatorSecret($secret);
+            $this->entityManager->flush();
+        }
+        
+        $qrCodeUrl = GoogleQrUrl::generate(
+            $user->getEmail(),
+            $user->getGoogleAuthenticatorSecret(),
+            'InkSpire'
+        );
+
+        return $this->render('user/2fa.html.twig', [
+            'qrCodeUrl' => $qrCodeUrl
+        ]);
+    }
+
+    #[Route('/2fa/verify', name: 'app_2fa_verify')]
+    public function verify2FA(Request $request, SessionInterface $session): Response
+    {
+        $userId = $session->get('temp_user_id');
+        if (!$userId) {
+            return $this->redirectToRoute('app_signin');
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            return $this->redirectToRoute('app_signin');
+        }
+
+        if (!$user->getGoogleAuthenticatorSecret()) {
+            return $this->redirectToRoute('app_2fa_setup');
+        }
+
+        // Generate QR code URL
+        $qrCodeUrl = GoogleQrUrl::generate(
+            $user->getEmail(),
+            $user->getGoogleAuthenticatorSecret(),
+            'InkSpire'
+        );
+
+        if ($request->isMethod('POST')) {
+            $code = $request->request->get('otp');
+            
+            if ($this->googleAuthenticator->checkCode(
+                $user->getGoogleAuthenticatorSecret(),
+                $code
+            )) {
+                // Clear temporary session
+                $session->remove('temp_user_id');
+                
+                // Authenticate user
+                $this->authenticate($user, $session, $request);
+                
+                return $this->redirectToRoute('app_home');
+            }
+            
+            // Invalid code, stay on verification page
+            return $this->render('user/2fa.html.twig', [
+                'error' => 'Invalid verification code. Please try again.',
+                'qrCodeUrl' => $qrCodeUrl,
+                'showVerificationForm' => true
+            ]);
+        }
+
+        // Show verification page
+        return $this->render('user/2fa.html.twig', [
+            'qrCodeUrl' => $qrCodeUrl,
+            'showVerificationForm' => true
+        ]);
+    }
 
 }
-

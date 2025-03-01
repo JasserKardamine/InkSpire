@@ -22,7 +22,6 @@ final class HomeController extends AbstractController
     public function index(SessionInterface $session): Response
     {
         $userid = $session->get('UserId',null) ; 
-
         if(!$userid){
             return $this->render('home/index.html.twig',[
                 'user' => null ,  
